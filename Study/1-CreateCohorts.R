@@ -3,6 +3,7 @@ health_questionnaire <- loadHealthQuestionnaire(ukb)
 covid19_result       <- loadCovid19Result(ukb)
 sequela_table        <- loadSequelaTable()
 genetic_data         <- loadGeneticData(ukb)
+waves_data           <- loadWaveData(ukb)
 
 # Create LC cohort ----
 x <- covid19_result |>
@@ -168,3 +169,36 @@ write.phe(paste0(dir_data,"/Results/LongCovid_cohort.phe"), longCovid_cohort)
 write.phe(paste0(dir_data,"/Results/Pacs_cohort.phe"), pacs_cohort)
 
 rm(list = c("longCovid_cohort", "pacs_cohort", "longCovid_attrition", "pacs_attrition"))
+
+# Create LC validation cohorts ----
+t1 <- waves_data |>
+  recordAttrition() |>
+  filter(across(ends_with("_antibody_test_result"), ~!is.na(.))) |>
+  recordAttrition("Participants with no missing antibody test data within the first 6 waves") |>
+  filter(across(ends_with("self-reported_date_that_antibody_test_sample_was_collected"), ~ !. %in% c(as.Date("1900-01-01"), as.Date("1999-01-01")))) |>
+  recordAttrition("Participants with a valid self-reported date that antibody test sample was collected") |>
+  mutate("infection" = rowSums(across(ends_with("_antibody_test_result")), na.rm = TRUE)) |> 
+  filter(infection > 0) |>
+  recordAttrition("Participants with at least one reported COVID-19 infection") 
+
+for(i in 0:5){
+  date_col <- paste0("w",i,"_self-reported_date_that_antibody_test_sample_was_collected")
+  inf_col  <- paste0("w",i,"_antibody_test_result")
+  t1[,date_col][!t1[,inf_col]]<- NA
+}
+
+t1 <- t1 |>
+  rowwise() |>
+  mutate("infection_date" = min(c_across(ends_with("self-reported_date_that_antibody_test_sample_was_collected")), na.rm = TRUE)) |>
+  ungroup() 
+
+# Website or post
+
+
+  
+  
+
+    
+
+
+  

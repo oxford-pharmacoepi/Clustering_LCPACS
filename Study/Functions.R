@@ -328,3 +328,30 @@ loadGeneticData <- function(ukb){
            "sex_chromosome_aneuploidy" = "f.22019.0.0") |>
     as_tibble()
 }
+
+loadWaveData <- function(ukb){
+  ukb |>
+    as_tibble() |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28000.","",.)),"_antibody_test_result"), starts_with("f.28000.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28008.","",.)),"_self-reported_date_that_antibody_test_sample_was_collected"), starts_with("f.28008.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28010.","",.)),"_method_of_returning_questionnaire_results"), starts_with("f.28010.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28011.","",.)),"_covid-19_symptom_fever_38_degrees_c_or_greater"), starts_with("f.28011.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28012.","",.)),"_covid-19_symptom_wheezing"), starts_with("f.28012.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28013.","",.)),"_covid-19_symptom_chills"), starts_with("f.28013.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28014.","",.)),"_covid-19_symptom_chest_pain"), starts_with("f.28014.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28015.","",.)),"_covid-19_symptom_feeling_more_tired_than_usual"), starts_with("f.28015.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28016.","",.)),"_covid-19_symptom_headache"), starts_with("f.28016.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28017.","",.)),"_covid-19_symptom_muscle_ache"), starts_with("f.28017.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28018.","",.)),"_covid-19_symptom_nausea_or_vomiting"), starts_with("f.28018.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28019.","",.)),"_covid-19_symptom_sore_throat"), starts_with("f.28019.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28020.","",.)),"_covid-19_symptom_abdominal_pain"), starts_with("f.28020.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28021.","",.)),"_covid-19_symptom_persistent_dry_cough"), starts_with("f.28021.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28022.","",.)),"_covid-19_symptom_diarrhoea"), starts_with("f.28022.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28023.","",.)),"_covid-19_symptom_runny_nose"), starts_with("f.28023.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28024.","",.)),"_covid-19_symptom_loss_of_sense_of_smell_and_taste"), starts_with("f.28024.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28025.","",.)),"_covid-19_symptom_shortness_of_breath"), starts_with("f.28025.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28031.","",.)),"_covid-19_symptom_self_reported_date_of_a_positive_covid-19_test_result"), starts_with("f.28031.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28032.","",.)),"_covid-19_symptom_date_questionnaire_results_were_received_by_post"), starts_with("f.28032.")) |>
+    rename_with(~paste0("w", gsub("\\..*","",gsub("f.28033.","",.)),"_covid-19_symptom_date_questionnaire_results_were_received_by_website"), starts_with("f.28033.")) |>
+    select("eid" = "f.eid", starts_with("w"))
+}
