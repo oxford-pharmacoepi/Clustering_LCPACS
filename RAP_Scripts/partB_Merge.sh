@@ -6,8 +6,8 @@
 # What this file does:
 # Merge genotype calls
 
-directory_input="Gilead_long_covid/GWAS/Long_covid_gilead/Initial_input/"
-directory_output="Gilead_long_covid/GWAS/Long_covid_gilead/Intermediary_files/"
+directory_input="Gilead_long_covid/GWAS/Long_covid_gilead/Initial_input"
+directory_output="Gilead_long_covid/GWAS/Long_covid_gilead/Intermediary_files"
 phenotype="LongCovid_cohort"
 
 run_merge="cp /mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c[1-9, X, Y]* . ;\
