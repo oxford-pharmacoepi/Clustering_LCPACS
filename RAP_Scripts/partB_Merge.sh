@@ -10,7 +10,7 @@ directory_input="GWAS/Long_covid_gilead/Initial_input"
 directory_output="GWAS/Long_covid_gilead/Intermediary_files"
 phenotype="LongCovid_cohort"
 
-run_merge="cp /mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c[1-9, X, Y]* . ;\
+run_merge="cp /mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c[1-9XY]* . ;\
         ls *.bed | sed -e 's/.bed//g'> files_to_merge.txt;\
         plink --merge-list files_to_merge.txt --make-bed\
         --chr 1-22 X Y XY --out ukb22418_25_merged;\
