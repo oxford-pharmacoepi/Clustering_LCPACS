@@ -69,9 +69,7 @@ longCovid_cohort <- longCovid_cases_cohort |>
     longCovid_controls_cohort |>
       select("eid", "specdate", "questionnaire_started", "year_birth") |>
       mutate(state = 0)
-  ) |>
-  mutate("age_when_infected" = year(specdate) - year_birth) |>
-  select(-c("year_birth"))
+  ) 
 
 rm(list = c("health_questionnaire", "longCovid_cases_cohort", "longCovid_controls_cohort", 
             "x", "x1", "x2", "x3"))
@@ -147,12 +145,46 @@ pacs_cohort  <- pacs_cases_cohort |>
          state = if_else(state < n_symptoms, 0, 1)) |>
   distinct() |>
   ungroup() |>
-  restoreAttrition(pacs_cases_cohort)
+  restoreAttrition(pacs_cases_cohort) |>
+  recordAttrition("Restrict to the earliest record")
 
 rm(list = c("t", "t1", "t2", "t3", "pacs_cases_cohort", "pacs_controls_cohort"))
 
 # Prepare .phe files and save cohorts -----
+longCovid_cohort <- longCovid_cohort |>
+  addGwasCovariates(ukb) |>
+  mutate("age_when_infected" = year(specdate) - year_of_birth) |>
+  select(-c("year_of_birth")) |>
+  filter(genetic_sex == sex) |>
+  recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
+  filter(is.na(sex_chromosome_aneuploidy)) |>
+  recordAttrition("Restrict to people with no sex chromosome aneuploidy") |>
+  filter(is.na(heterozygosity)) |>
+  recordAttrition("Restrict to people with that are no outliers for heterozygosity or missing rate")
+
 longCovid_attrition <- attr(longCovid_cohort, "cohort_attrition")
+
+longCovid_cohort <- as.phe(longCovid_cohort |> 
+                             select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "batch", starts_with("pc")) |> 
+                             mutate("FID" = IID) |> 
+                             relocate("FID"), "FID", "IID")
+
+pacs_cohort <- pacs_cohort |>
+  addGwasCovariates(ukb) |>
+  mutate("age_when_infected" = year(specdate) - year_of_birth) |>
+  select(-c("year_of_birth")) |>
+  filter(genetic_sex == sex) |>
+  recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
+  filter(is.na(sex_chromosome_aneuploidy)) |>
+  recordAttrition("Restrict to people with no sex chromosome aneuploidy") |>
+  filter(is.na(heterozygosity)) |>
+  recordAttrition("Restrict to people with that are no outliers for heterozygosity or missing rate")
+
+pacs_cohort <- as.phe(pacs_cohort |> 
+                        select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "batch", starts_with("pc")) |> 
+                        mutate("FID" = IID) |> 
+                        relocate("FID"), "FID", "IID")
+
 pacs_attrition <- attr(pacs_cohort, "cohort_attrition")
 
 save(longCovid_cohort,
@@ -160,10 +192,6 @@ save(longCovid_cohort,
      longCovid_attrition,
      pacs_attrition,
      file = paste0(dir_data,"Results/cohortsData.Rdata"))
-
-
-longCovid_cohort <- as.phe(longCovid_cohort |> select("IID" = "eid", "state") |> mutate("FID" = IID) |> relocate("FID"), "FID", "IID")
-pacs_cohort      <- as.phe(pacs_cohort |> select("IID" = "eid", "state") |> mutate("FID" = IID) |> relocate("FID"), "FID", "IID")
 
 write.phe(paste0(dir_data,"/Results/LongCovid_cohort.phe"), longCovid_cohort)
 write.phe(paste0(dir_data,"/Results/Pacs_cohort.phe"), pacs_cohort)

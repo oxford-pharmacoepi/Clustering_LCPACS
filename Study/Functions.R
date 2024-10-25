@@ -355,3 +355,23 @@ loadWaveData <- function(ukb){
     rename_with(~paste0("w", gsub("\\..*","",gsub("f.28033.","",.)),"_covid-19_symptom_date_questionnaire_results_were_received_by_website"), starts_with("f.28033.")) |>
     select("eid" = "f.eid", starts_with("w"))
 }
+
+addGwasCovariates <- function(table, ukb){
+  table |>
+    left_join(
+      ukb |>
+        as_tibble() |>
+        select("eid" = "f.eid",
+               "year_of_birth" = "f.34.0.0",
+               "sex"   = "f.31.0.0",
+               "batch" = "f.22000.0.0",
+               "pc1"  = "f.22009.0.1", "pc2" = "f.22009.0.2", "pc3" = "f.22009.0.3",
+               "pc4"  = "f.22009.0.4", "pc5" = "f.22009.0.5", "pc6" = "f.22009.0.6",
+               "pc7"  = "f.22009.0.7", "pc8" = "f.22009.0.8", "pc9" = "f.22009.0.9",
+               "pc10" = "f.22009.0.10",
+               "genetic_sex" = "f.22001.0.0",
+               "sex_chromosome_aneuploidy" = "f.22019.0.0",
+               "heterozygosity" = "f.22027.0.0"),
+      by = "eid"
+    )
+}
