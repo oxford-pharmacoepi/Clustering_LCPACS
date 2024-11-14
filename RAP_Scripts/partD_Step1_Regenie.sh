@@ -1,25 +1,25 @@
 #!/bin/sh
 
-directory_input=""
-directory_output=""
-phenotype=""
-outcome=""
+directory_input="GWAS/Long_covid_gilead"
+directory_output="GWAS/Long_covid_gilead/Intermediary_files"
+phenotype="LongCovid_cohort"
+outcome="state"
 
 run_regenie_step1="regenie --step 1\
  --lowmem --out StepD-${phenotype}_results --bed ukb22418_25_merged\
- --phenoFile Initial_input_${phenotype}.phe --covarFile Initial_input_${phenotype}.phe\
+ --phenoFile ${phenotype}.phe --covarFile ${phenotype}.phe\
  --extract snps_qc_pass_${phenotype}.snplist --phenoCol ${outcome}\
- --covarCol Sex\
- --covarCol Age\
- --covarCol Genetic_batch\
- --covarCol PC{1:10}\
+ --covarCol sex\
+ --covarCol age\
+ --covarCol batch\
+ --covarCol pc{1:10}\
  --bsize 1000 --bt --loocv --gz --threads 16"
 
-dx run swiss-army-knife -iin="/${directory_input}/Merged_files/ukb22418_25_merged.bed" \
-   -iin="/${directory_input}/Merged_files/ukb22418_25_merged.bim" \
-   -iin="/${directory_input}/Merged_files/ukb22418_25_merged.fam"\
+dx run swiss-army-knife -iin="/${directory_input}/Intermediary_files/ukb22418_25_merged.bed" \
+   -iin="/${directory_input}/Intermediary_files/ukb22418_25_merged.bim" \
+   -iin="/${directory_input}/Intermediary_files/ukb22418_25_merged.fam"\
    -iin="/${directory_input}/Intermediary_files/snps_qc_pass_${phenotype}.snplist"\
-   -iin="/${directory_input}/Initial_input/Initial_input_${phenotype}.phe" \
+   -iin="/${directory_input}/Initial_input/${phenotype}.phe" \
    --name="StepD_"${phenotype}\
    -icmd="${run_regenie_step1}" --tag="Step1" --instance-type "mem1_ssd1_v2_x16"\
    --destination="/${directory_output}" --brief --yes

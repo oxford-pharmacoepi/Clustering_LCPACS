@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+Results/*.txt
+Results/LongCovid_assoc.regenie.merged.txt
+/Results
