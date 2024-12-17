@@ -1,7 +1,7 @@
 #!/bin/sh
 
 directory_input="GWAS/Long_covid_gilead/Initial_input"
-directory_output="GWAS/Long_covid_gilead/Intermediary_files"
+directory_output="GWAS/Long_covid_gilead/Genotype_calls_merged"
 phenotype="LongCovid_cohort"
 
 run_merge="cp /mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c[1-9]* . ;\
@@ -11,5 +11,5 @@ run_merge="cp /mnt/project/Bulk/Genotype\ Results/Genotype\ calls/ukb22418_c[1-9
         rm files_to_merge.txt;"
 
 dx run swiss-army-knife -iin="/${directory_input}/${phenotype}.phe"\
-   -icmd="${run_merge}" --tag="Step1" --instance-type "mem1_ssd1_v2_x16"\
-   --destination="/${directory_output}" --brief --yes --name="partB_${phenotype}"
+   -icmd="${run_merge}" --tag="Step1_Regenie" --instance-type "mem1_ssd1_v2_x16"\
+   --destination="/${directory_output}" --brief --yes --name="1-MergeGenotypeCallsFiles"
