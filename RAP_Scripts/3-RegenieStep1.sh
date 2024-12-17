@@ -11,6 +11,8 @@ run_regenie_step1="regenie --step 1\
  --extract snps_qc_pass_${phenotype}.snplist --phenoCol ${outcome}\
  --covarCol sex\
  --covarCol age\
+ --covarCol age2\
+ --covarCol age_sex\
  --covarCol batch\
  --covarCol pc{1:10}\
  --bsize 1000 --bt --loocv --gz --threads 16"
