@@ -154,6 +154,8 @@ rm(list = c("t", "t1", "t2", "t3", "pacs_cases_cohort", "pacs_controls_cohort"))
 longCovid_cohort <- longCovid_cohort |>
   addGwasCovariates(ukb) |>
   mutate("age_when_infected" = year(specdate) - year_of_birth) |>
+  mutate("age2" = age_when_infected^2) |>
+  mutate("agesex" = age_when_infected*sex) |>
   select(-c("year_of_birth")) |>
   filter(genetic_sex == sex) |>
   recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
@@ -165,13 +167,15 @@ longCovid_cohort <- longCovid_cohort |>
 longCovid_attrition <- attr(longCovid_cohort, "cohort_attrition")
 
 longCovid_cohort <- as.phe(longCovid_cohort |> 
-                             select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "batch", starts_with("pc")) |> 
+                             select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "age2", "agesex", "batch", starts_with("pc")) |> 
                              mutate("FID" = IID) |> 
                              relocate("FID"), "FID", "IID")
 
 pacs_cohort <- pacs_cohort |>
   addGwasCovariates(ukb) |>
   mutate("age_when_infected" = year(specdate) - year_of_birth) |>
+  mutate("age2" = age_when_infected^2) |>
+  mutate("agesex" = age_when_infected*sex) |>
   select(-c("year_of_birth")) |>
   filter(genetic_sex == sex) |>
   recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
@@ -181,7 +185,7 @@ pacs_cohort <- pacs_cohort |>
   recordAttrition("Restrict to people with that are no outliers for heterozygosity or missing rate")
 
 pacs_cohort <- as.phe(pacs_cohort |> 
-                        select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "batch", starts_with("pc")) |> 
+                        select("IID" = "eid", "state", "age" = "age_when_infected", "sex", "age2", "agesex", "batch", starts_with("pc")) |> 
                         mutate("FID" = IID) |> 
                         relocate("FID"), "FID", "IID")
 
