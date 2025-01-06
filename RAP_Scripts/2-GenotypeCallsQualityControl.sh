@@ -1,9 +1,9 @@
 #!/bin/sh
 # This script runs the QC process using PLINK on the merged file generated in 
-# partB-merge-files.sh as described in the 
+# 1-MergeGenotypeCallsFiles.sh as described in the 
 
 directory_input="GWAS/Long_covid_gilead"
-directory_output="GWAS/Long_covid_gilead/Genotype_calls_qc"
+directory_output="GWAS/Long_covid_gilead/Intermediate_files"
 phenotype="LongCovid_cohort"
 
 run_plink_qc="plink2 --bfile ukb22418_25_merged\
@@ -12,7 +12,7 @@ run_plink_qc="plink2 --bfile ukb22418_25_merged\
  --maf 0.01\
  --keep ${phenotype}.phe\
  --mac 20\
- --geno 0.1\
+ --geno 0.01\
  --hwe 1e-6\
  --max-alleles 2\
  --mind 0.1\

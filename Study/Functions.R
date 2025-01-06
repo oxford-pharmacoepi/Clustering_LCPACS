@@ -223,6 +223,138 @@ loadHealthQuestionnaire <- function(ukb){
   
 }
 
+loadHealthAndWellBeingQuestionnaireWide <- function(ukb){
+  bd <- ukb |>
+    select(
+      "eid" = "f.eid",
+      "questionnaire_started"            = "f.28754.0.0",
+      "symptom_gastrointestinal_issues"          = "f.28606.0.0",
+      "length_gastrointestinal_issues"           = "f.28607.0.0",
+      "symptom_vision_problems"                  = "f.28609.0.0",
+      "length_vision_problems"                   = "f.28610.0.0",
+      "symptom_loss_or_change_in_sense_of_smell" = "f.28612.0.0",
+      "length_loss_or_change_in_sense_of_smell"  = "f.28613.0.0",
+      "symptom_loss_or_change_in_sense_of_taste" = "f.28615.0.0",
+      "length_loss_or_change_in_sense_of_taste"  = "f.28616.0.0",
+      "symptom_tinnitus"                         = "f.28624.0.0",
+      "length_tinnitus"                          = "f.28625.0.0",
+      "symptom_hearing_loss"                     = "f.28627.0.0",
+      "length_hearing_loss"                      = "f.28628.0.0",
+      "symptom_hearing_issues"                   = "f.28630.0.0",
+      "length_hearing_issues"                    = "f.28631.0.0",
+      "symptom_headaches"                        = "f.28633.0.0",
+      "length_headaches"                         = "f.28634.0.0",
+      "symptom_chest_pain"                       = "f.28642.0.0",
+      "length_chest_pain"                        = "f.28643.0.0",
+      "symptom_pain_on_breathing"                = "f.28645.0.0",
+      "length_pain_on_breathing"                 = "f.28646.0.0",
+      "symptom_abdominal_pain_tummy_ache"        = "f.28648.0.0",
+      "length_abdominal_pain_tummy_ache"         = "f.28649.0.0",
+      "symptom_muscle_pain_achy_muscles"         = "f.28654.0.0",
+      "length_muscle_pain_achy_muscles"          = "f.28655.0.0",
+      "symptom_joint_pain_or_swelling_of_joint"  = "f.28657.0.0",
+      "length_joint_pain_or_swelling_of_joint"   = "f.28658.0.0",
+      "symptom_persistent_cough"                 = "f.28663.0.0",
+      "length_persistent_cough"                  = "f.28664.0.0",
+      "symptom_tightness_in_the_chest"           = "f.28669.0.0",
+      "length_tightness_in_the_chest"            = "f.28670.0.0",
+      "symptom_chest_pressure"                   = "f.28672.0.0",
+      "length_chest_pressure"                    = "f.28673.0.0",
+      "symptom_postural_tachycardia"             = "f.28678.0.0",
+      "length_postural_tachycardia"              = "f.28679.0.0",
+      "symptom_dizziness_light_headedness"       = "f.28681.0.0",
+      "length_dizziness_light_headedness"        = "f.28682.0.0",
+      "symptom_shortness_of_breath_or_trouble_breathing" = "f.28684.0.0",
+      "length_shortness_of_breath_or_trouble_breathing"  = "f.28685.0.0",
+      "symptom_difficulty_sleeping"              = "f.28687.0.0",
+      "length_difficulty_sleeping"               = "f.28688.0.0",
+      "symptom_unrestful_sleep"                  = "f.28693.0.0",
+      "length_unrestful_sleep"                   = "f.28694.0.0",
+      "symptom_mild_fatigue"                     = "f.28696.0.0",
+      "length_mild_fatigue"                      = "f.28697.0.0",
+      "symptom_severe_fatigue"                   = "f.28699.0.0",
+      "length_severe_fatigue"                    = "f.28700.0.0",
+      "symptom_post_exertional_symptom_exacerbation" = "f.28702.0.0",
+      "length_post_exertional_symptom_exacerbation"  = "f.28703.0.0",
+      "symptom_new_allergy_or_intolerance"       = "f.28711.0.0",
+      "length_new_allergy_or_intolerance"        = "f.28712.0.0",
+      "symptom_fever"                            = "f.28714.0.0",
+      "length_fever"                             = "f.28715.0.0",
+      "symptom_problems_thinking"                = "f.28720.0.0",
+      "length_problems_thinking"                 = "f.28721.0.0",
+      "symptom_problems_communicating"           = "f.28723.0.0",
+      "length_problems_communicating"            = "f.28724.0.0",
+      "symptom_problems_relating_to_mood_anxiety_and_emotions" = "f.28726.0.0",
+      "length_problems_relating_to_mood_anxiety_and_emotions"  = "f.28727.0.0",
+      "symptom_numbness_or_tingling_somewhere_in_the_body"     = "f.28732.0.0",
+      "length_numbness_or_tingling_somewhere_in_the_body"      = "f.28733.0.0"
+    ) |>
+    as_tibble()
+  
+  bd <- bd %>%
+  #  mutate(questionnaire_started = if_else(rowSums(select(., starts_with("symptom_")) == -1) > 0, as.Date("1999-01-01"), questionnaire_started)) %>%
+  #  mutate(questionnaire_started = if_else(rowSums(select(., starts_with("symptom_")) == -3) > 0, as.Date("1999-01-01"), questionnaire_started))# |>
+   mutate(who_abdominal_pain    = symptom_abdominal_pain_tummy_ache,
+         length_abdominal_pain = length_abdominal_pain_tummy_ache,
+         who_menstrual_and_period_problems    = 0,
+         length_menstrual_and_period_problems = 0,
+         who_altered_smell_taste    = if_else(symptom_loss_or_change_in_sense_of_smell == 1 | symptom_loss_or_change_in_sense_of_taste == 1, 1, 0),
+         length_altered_smell_taste = pmax(length_loss_or_change_in_sense_of_smell, length_loss_or_change_in_sense_of_taste, na.rm = TRUE),
+         who_anxiety    = symptom_problems_relating_to_mood_anxiety_and_emotions,
+         length_anxiety = length_problems_relating_to_mood_anxiety_and_emotions,
+         who_blurred_vision = symptom_vision_problems,
+         length_blurred_vision = length_vision_problems,
+         who_chest_pain    = if_else(symptom_chest_pain == 1| symptom_pain_on_breathing == 1, 1, 0),
+         length_chest_pain = pmax(length_chest_pain, length_pain_on_breathing, na.rm = TRUE),
+         who_cognitive_dysfunction_brain_fog    = if_else(symptom_problems_communicating == 1 | symptom_problems_thinking == 1, 1, 0),
+         length_cognitive_dysfunction_brain_fog = pmax(length_problems_communicating, length_problems_thinking, na.rm = TRUE),
+         who_cough    = symptom_persistent_cough,
+         length_cough = length_persistent_cough,
+         who_depression    = 0,
+         length_depression = 0,
+         who_dizziness    = symptom_dizziness_light_headedness,
+         length_dizziness = length_dizziness_light_headedness,
+         who_fatigue    = if_else(symptom_mild_fatigue == 1 | symptom_severe_fatigue == 1, 1, 0),
+         length_fatigue = pmax(length_mild_fatigue, length_severe_fatigue, na.rm = TRUE),
+         who_intermittent_fever    = symptom_fever,
+         length_intermittent_fever = length_fever,
+         who_gastrointerestinal_issues    = symptom_gastrointestinal_issues,
+         length_gastrointerestinal_issues = length_gastrointestinal_issues,
+         who_headache    = symptom_headaches,
+         length_headache = length_headaches,
+         who_memory_issues    = 0,
+         length_memory_issues = 0,
+         who_joint_pain    = symptom_joint_pain_or_swelling_of_joint,
+         length_joint_pain = length_joint_pain_or_swelling_of_joint,
+         who_muscle_pain_spasms    = symptom_muscle_pain_achy_muscles,
+         length_muscle_pain_spasms = length_muscle_pain_achy_muscles,
+         who_neuralgias    = 0,
+         length_neuralgias = 0,
+         who_new_onset_allergies    = symptom_new_allergy_or_intolerance,
+         length_new_onset_allergies = length_new_allergy_or_intolerance,
+         who_pins_and_needles_sensations    = symptom_numbness_or_tingling_somewhere_in_the_body,
+         length_pins_and_needles_sensations = length_numbness_or_tingling_somewhere_in_the_body,
+         who_post_exertional_malaise    = symptom_post_exertional_symptom_exacerbation,
+         length_post_exertional_malaise = length_post_exertional_symptom_exacerbation,
+         who_shortness_of_breath    = symptom_shortness_of_breath_or_trouble_breathing,
+         length_shortness_of_breath = length_shortness_of_breath_or_trouble_breathing,
+         who_sleep_disorders    = if_else(symptom_difficulty_sleeping == 1 | symptom_unrestful_sleep == 1, 1, 0),
+         length_sleep_disorders = pmax(length_difficulty_sleeping, length_unrestful_sleep, na.rm = TRUE),
+         who_tachycardia_palpitations    = symptom_postural_tachycardia,
+         length_tachycardia_palpitations = length_postural_tachycardia,
+         who_tinnitus_and_other_hearing_issues    = if_else(symptom_tinnitus == 1 | symptom_hearing_loss == 1 | symptom_hearing_issues == 1, 1, 0),
+         length_tinnitus_and_other_hearing_issues = pmax(length_tinnitus, length_hearing_loss, length_hearing_issues, na.rm = TRUE)
+  ) |>
+   select(-starts_with("symptom_")) |>
+    rename_at(vars(starts_with("who_")), ~gsub("who","symptom",.))
+  
+  bd <- bd |>
+    mutate_at(vars(starts_with("length_")), ~if_else(.  %in% c(-1,-3, 1), 0, .)) |>
+    mutate_at(vars(starts_with("length_")), ~if_else(. == 2, 28, .)) |>
+    mutate_at(vars(starts_with("length_")), ~if_else(. == 3, 365,.))
+  return(bd)
+}
+
 loadCovid19Result <- function(ukb){
   covid19_result_england  <- read.table(paste0(dir_data,"UKBiobank/covid19_result_england.txt"), header = TRUE) |> as_tibble()
   covid19_result_scoltand <- read.table(paste0(dir_data,"UKBiobank/covid19_result_scotland.txt"), header = TRUE) |> as_tibble()
@@ -313,6 +445,33 @@ loadSequelaTable <- function(){
   return(sequela_table)
 }
 
+
+loadSequelaArterialTable <- function(){
+  sequela_arterial_table <- tibble(
+    "organ_system" = as.character(),
+    "sequela"      = as.character(),
+    "icd10_code"   = as.character()
+  ) |>
+    add_row("organ_system" = "cardiovascular", "sequela" = "acute_coronary_disease",  "icd10_code" = c("I24","I240","I241","I248","I249")) |>
+    add_row("organ_system" = "cardiovascular", "sequela" = "angina",                  "icd10_code" = c("I20","I200","I201","I208","I209")) |>
+    add_row("organ_system" = "cardiovascular", "sequela" = "ischemic_cardiomyopathy", "icd10_code" = "I255") |>
+    add_row("organ_system" = "cardiovascular", "sequela" = "myocardial_infarction",   "icd10_code" = c("I21","I210","I211","I212","I213","I214","I219","I21X",
+                                                                                                       "I22","I220","I221","I228","I229"))
+  return(sequela_arterial_table)
+}
+
+loadSequelaVenousTable <- function(){
+  sequela_venous_table <- tibble(
+    "organ_system" = as.character(),
+    "sequela"      = as.character(),
+    "icd10_code"   = as.character()
+  ) |>
+    add_row("organ_system" = "coagulation", "sequela" = "deep_vein_thrombosis", "icd10_code" = c("I801", "I802", "I803", "I81","I81X")) |>
+    add_row("organ_system" = "coagulation", "sequela" = "pulmonary_embolism",   "icd10_code" = c("I26","I260","I269")) |>
+    add_row("organ_system" = "coagulation", "sequela" = "venous_thrombotic_embolism",  "icd10_code" = c("I82","I820", "I822", "I823", "I828","I829"))
+  return(sequela_venous_table)
+}
+
 loadGeneticData <- function(ukb){
   ukb |>
     select("eid" = "f.eid", 
@@ -374,4 +533,113 @@ addGwasCovariates <- function(table, ukb){
                "heterozygosity" = "f.22027.0.0"),
       by = "eid"
     )
+}
+
+getManhattanPlot <- function(gwas, 
+                             y_lim,
+                             dot_size = 0.1,
+                             colors = c("#92C5DE","#4393C3","#2166AC"),
+                             chr_len = 22,
+                             reduce_dataset = 0.01,
+                             h_line_color = "red"
+){
+  # Reduce dataset
+  gwas_top <- gwas %>% filter(LOG10P > 1)
+  gwas_low <- gwas %>% filter(LOG10P <= 1) %>% sample_frac(reduce_dataset)
+  
+  gwas1 <- gwas_top %>% full_join(gwas_low) 
+  
+  # Manhattan plot -------
+  don <- gwas1 %>%
+    # Compute chromosome size
+    group_by(CHROM) %>%
+    summarise(chr_len = max(GENPOS)) %>%
+    # Calculate cumulative position of each chromosome
+    mutate(tot = cumsum(as.numeric(chr_len))-chr_len) %>%
+    select(-chr_len) %>%
+    # Add this info to the initial dataset
+    left_join(gwas1, ., by = c("CHROM" ="CHROM")) %>%
+    # Add the cumulative position of each SNP
+    arrange(CHROM, GENPOS) %>%
+    mutate(GENPOScum = GENPOS+tot)
+  
+  # x axis
+  axisdf = don %>% group_by(CHROM) %>% summarize(center=(max(GENPOScum) + min(GENPOScum) ) / 2 )
+  
+  plot1 <- ggplot(don, aes(x=GENPOScum, y=LOG10P)) +
+    # Show all points
+    geom_point(aes(color=as.factor(CHROM)), size = dot_size) +
+    scale_color_manual(values = rep(colors, chr_len)) +
+    # custom X axis:
+    scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = c(0.015,0.015)) +
+    scale_y_continuous(expand = c(0, 0), breaks = seq(0,y_lim,2)) +     # remove space between plot area and x axis
+    coord_cartesian(ylim = c(0,y_lim)) +
+    # # Custom the theme:
+    theme_bw() +
+    theme( 
+      legend.position="none",
+      panel.border = element_blank(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      axis.line.x = element_line(color = "black", linewidth = 0.5),
+      axis.line.y = element_line(color = "black", linewidth = 0.5),
+      axis.text.x = element_text(margin = margin(t = 1), size = 9),
+      axis.text.y  = element_text(size = 9),
+      axis.title = element_text(size = 9),
+    ) +
+    #Plot a red horizontal line at 5e-8
+    geom_hline(yintercept = -log10(5e-8), color = h_line_color, linewidth = 0.3) +
+    labs(x = 'Chromosome', y = expression(-log[10](P)))
+  
+  return(plot1)
+}
+
+getQQPlot <- function(gwas,x_lim,y_lim,
+                      color = "#2166AC",
+                      dot_size = 0.1,
+                      reduce_dataset = 0.01
+){
+  
+  # QQ plot ----------------------------------------------------------------------
+  n <- nrow(gwas)
+  ci <- .95
+  
+  dat <- data.frame(
+    observed = sort(gwas$LOG10P),
+    expected = sort(-log10(ppoints(n))),
+    clower   = sort(-log10(qbeta(p = (1 - ci) / 2, shape1 = seq(n), shape2 = rev(seq(n))))),
+    cupper   = sort(-log10(qbeta(p = (1 + ci) / 2, shape1 = seq(n), shape2 = rev(seq(n)))))
+  )
+  
+  # Reduce dataset size
+  data_top <- dat %>% filter(observed > 1)
+  data_low <- dat %>% filter(observed <= 1) %>% sample_frac(reduce_dataset)
+  dat <- data_top %>% full_join(data_low)
+  
+  # Customize qqplot
+  plot2 <- ggplot(dat, aes(x = expected, y = observed)) +
+    scale_x_continuous(limits = c(0,x_lim), expand = c(0,0), breaks = seq(0,7,2)) + 
+    scale_y_continuous(limits = c(0,y_lim), expand = c(0,0), breaks = seq(0,y_lim,4)) +
+    geom_segment(data = . %>% filter(expected == max(expected)),
+                 aes(x = 0, xend = x_lim, y = 0, yend = x_lim),
+                 size = 0.25, color = "grey30", lineend = "round",alpha = 0.7) +
+    geom_ribbon(aes(ymax = cupper, ymin = clower), fill = "grey30", alpha = 0.5) +
+    geom_point(color = color,  size = dot_size) +
+    labs(x = expression(paste("Expected -log"[10],"(", plain(P),")")),
+         y = expression(paste("Observed -log"[10],"(", plain(P),")"))) +
+    theme_bw() +
+    theme(
+      legend.position="none",
+      panel.border = element_rect(),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank(),
+      panel.grid.major.y = element_blank(),
+      panel.grid.minor.y = element_blank(),
+      axis.title = element_text(size = 9),
+      axis.text  = element_text(size = 9)
+    ) 
+  
+  return(plot2)
 }
