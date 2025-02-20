@@ -95,11 +95,9 @@ lc_controls <- covid19_result |>
       filter(!is.na(questionnaire_started)),
     by = "eid"
   ) |>
-   recordAttrition("Restrict to participants that answered the health and well-being web-questionnaire") |>
- #   filter(questionnaire_started != as.Date("1999-01-01")) |>
-  #  recordAttrition("Restrict to participants that answered yes/no to all the questions from the health and well-being web-questionnaire.") |>
+  recordAttrition("Restrict to participants that answered the health questionnaire") %>%
   filter(specdate < questionnaire_started) |>
-  recordAttrition("Restrict to participants without a SARS-CoV-2 infection confirmed by a positive polymerase chain test reaction before answering the questionnaire.")
+  recordAttrition("Restrict to participants without a positive test before answering questionnaire")
 
 lc_controls <- lc_controls |>
   group_by(eid) |>
@@ -110,7 +108,7 @@ lc_controls <- lc_controls |>
 
 lc_controls <- lc_controls |>
   filter(((specdate+washout_period) < questionnaire_started) & (specdate > (questionnaire_started-365))) |>
-   recordAttrition(paste0("Restrict to participants without a SARS-CoV-2 infection confirmed by a positive polymerase chain test reaction between 1 year and ",washout_period," days before answering the questionnaire."))
+  recordAttrition(paste0("Restrict to participants without infections within 1 year and ", washout_period, " days"))
 
 for(s in symptom_cols) {
   var = paste0("symptom_",s)
@@ -137,9 +135,9 @@ lc_controls <- lc_controls |>
 
 lc_controls <- lc_controls |>
   filter((questionnaire_started-length) > specdate) |>
-    recordAttrition("Restrict to people with at least one non persistent symptom") |>
+    recordAttrition("Restrict to people with at least one non-persistent symptom") |>
   filter(symptom >= n_symptoms) |>
-  recordAttrition("Restrict to people that reported at least one symptom of the questionnaire")
+  recordAttrition("Restrict to participants with multiple symptoms")
 
 # Remove if they have a positive test between the negative test and the questionnaire
 lc_controls_remove <- lc_controls |>
@@ -171,9 +169,9 @@ lc_controls <- lc_controls |>
   recordAttrition("Removed people who are in the case cohort")
 
 # Save attrition
-write.csv(attr(longCovid_cases, "cohort_attrition"), paste0(dir_results,"attrition_longcovid_cases.csv"))
-write.csv(attr(longCovid_controls, "cohort_attrition"), paste0(dir_results,"attrition_longcovid_controls.csv"))
-write.csv(attr(lc_controls, "cohort_attrition"), paste0(dir_results,"attrition_longcovid_controls_clustering.csv"))
+write.csv(attr(longCovid_cases, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_cases.csv"))
+write.csv(attr(longCovid_controls, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_controls.csv"))
+write.csv(attr(lc_controls, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_controls_clustering.csv"))
 
 set.seed(11)
 # Random sample roughly half the size of both cohorts combined
@@ -181,8 +179,8 @@ longCovid_random <- longCovid_cases |>
   dplyr::union_all(lc_controls) |>
   dplyr::slice_sample(n = 21962)
 
-write.csv(lc_controls, paste0(dir_results,"longcovid_controls_clustering.csv"))
-write.csv(longCovid_cases, paste0(dir_results,"longcovid_cases_clustering.csv"))
-write.csv(longCovid_random, paste0(dir_results,"longcovid_random_clustering.csv"))
+write.csv(lc_controls, paste0(dir_results,"/longcovid_controls_clustering.csv"))
+write.csv(longCovid_cases, paste0(dir_results,"/longcovid_cases_clustering.csv"))
+write.csv(longCovid_random, paste0(dir_results,"/longcovid_random_clustering.csv"))
 
 # Check again same here as in Marta's GitHub

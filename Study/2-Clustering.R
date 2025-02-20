@@ -1,11 +1,11 @@
 # On to clustering
-longCovid_cases <- read.csv(paste0(dir_results,"longcovid_cases_clustering.csv")) |>
+longCovid_cases <- read.csv(paste0(dir_results,"/longcovid_cases_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
-longCovid_controls <- read.csv(paste0(dir_results,"longcovid_controls_clustering.csv")) |>
+longCovid_controls <- read.csv(paste0(dir_results,"/longcovid_controls_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
-longCovid_random <- read.csv(paste0(dir_results,"longcovid_random_clustering.csv")) |>
+longCovid_random <- read.csv(paste0(dir_results,"/longcovid_random_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
 
@@ -80,6 +80,47 @@ run_clustering <- function(mydata,numclust, numsymp, counter, namefolder, result
     lcmodel <- reshape2::melt(lc$probs, level=2)
     lcmodel$L2 <- stringr::str_to_title(lcmodel$L2)
     
+    # Change cluster assignment number depending on size
+    cluster_sizes <- lc$predclass %>%
+      table() %>%
+      order(decreasing = TRUE)  # Sort by size (largest first)
+    
+    # Create a mapping from old to new cluster labels
+    new_labels <- setNames(cluster_sizes, 1:numclust)
+    
+    # Reassign clusters based on size ranking
+    if(numclust == 2) {
+      lcmodel <- lcmodel %>%
+        dplyr::mutate(
+          Var1 = dplyr::case_when(
+            Var1 == "class 1: " ~ paste0("class ", new_labels[[1]],":"),
+            Var1 == "class 2: " ~ paste0("class ", new_labels[[2]],":"),
+            TRUE ~ Var1
+          )
+        )
+    } else if(numclust == 3){
+      lcmodel <- lcmodel %>%
+        dplyr::mutate(
+          Var1 = dplyr::case_when(
+            Var1 == "class 1: " ~ paste0("class ", new_labels[[1]],":"),
+            Var1 == "class 2: " ~ paste0("class ", new_labels[[2]],":"),
+            Var1 == "class 3: " ~ paste0("class ", new_labels[[3]],":"),
+            TRUE ~ Var1
+          )
+        )
+    } else {
+      lcmodel <- lcmodel %>%
+        dplyr::mutate(
+          Var1 = dplyr::case_when(
+            Var1 == "class 1: " ~ paste0("class ", new_labels[[1]],":"),
+            Var1 == "class 2: " ~ paste0("class ", new_labels[[2]],":"),
+            Var1 == "class 3: " ~ paste0("class ", new_labels[[3]],":"),
+            Var1 == "class 4: " ~ paste0("class ", new_labels[[4]],":"),
+            TRUE ~ Var1
+          )
+        )
+    }
+    
     # Get nice plot of class membership
     zp1 <- ggplot(lcmodel,aes(x = L2, y = value, fill = Var2))
     zp1 <- zp1 + geom_bar(stat = "identity", position = "stack")
@@ -137,7 +178,6 @@ run_clustering <- function(mydata,numclust, numsymp, counter, namefolder, result
                                   !!!setNames(1:numclust, new_labels))) |>
       dplyr::select(-"cluster_assignment") |>
       rename("cluster_assignment" = "new_cluster")
-    
     
     # Look at number of people with symptom per cluster
     number_people <- working_data %>% dplyr::select(-c("eid"))
@@ -242,6 +282,8 @@ run_clustering <- function(mydata,numclust, numsymp, counter, namefolder, result
       
       y |>
         save_as_docx(path = paste0(dir_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.docx"))
+      
+      saveRDS(y, paste0(dir_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.rds"))
       
       rm(list = c("baselineCharacteristics", "biomarkers","x","name","name_cohort",
                   "longCovid_cohort","pacs_cohort","y", "merge", "row_fill"))
@@ -381,6 +423,8 @@ for(ii in merge){
 
 y |>
   save_as_docx(path = paste0(dir_results, "/Tables/BaselineCharacteristics_clustering.docx"))
+
+saveRDS(y, paste0(dir_results,"/Tables/BaselineCharacteristics_clustering.rds"))
 
 rm(list = c("baselineCharacteristics", "biomarkers","x","name","name_cohort",
             "longCovid_cohort","pacs_cohort","y", "merge", "row_fill"))
