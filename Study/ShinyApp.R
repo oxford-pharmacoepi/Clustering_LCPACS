@@ -1,11 +1,12 @@
 library(shiny)
 library(shinydashboard)
-library(gt)
 library(officer)
 library(tidyverse)
 library(magrittr)
 library(fs)
 library(flextable)
+library(here)
+library(DT)
 
 # Load Data in Global Environment
 attrition_files <- list.files(here::here("Results"), pattern = "attrition_longcovid_.*\\.csv", full.names = TRUE)
