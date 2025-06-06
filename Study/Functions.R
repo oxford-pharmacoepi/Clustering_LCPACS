@@ -960,7 +960,7 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
       mutate(order = row_number())
   }
 
-  if(length(demographics_list) == 2) {
+  if(length(demographics_list) == 2 && name_cohort[[1]] == "Controls") {
     # Merge all the tables --- Long covid
     x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls" = " ", "order" = 0, "Cases" = " ") |>
       rbind(
@@ -983,6 +983,29 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
       filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
       dplyr::select(-c("order")) |>
       rename(!!paste0(name,"_Controls") := "Controls", !!paste0(name,"_Cases") := "Cases")
+  } else if (length(demographics_list) == 2 && name_cohort[[1]] == "Controls_matched") {
+    # Merge all the tables --- Long covid
+    x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
+      rbind(
+        demographics_list[[1]] |>
+          inner_join(demographics_list[[2]], by = c("order","Risk factor"))
+      ) |>
+      add_row(
+        "Risk factor" = "Comorbidities [Cases (%)]", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
+      rbind(
+        commorbidities_list[[1]] |>
+          inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
+          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+      ) |>
+      add_row("Risk factor" = "Biomarkers [Mean (SD)]","Controls_matched" = " ","order" = 0,"Cases_matched" = " ") |>
+      rbind(
+        biomarkers_list[[1]] |>
+          inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
+          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+      ) |>
+      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+      dplyr::select(-c("order")) |>
+      rename(!!paste0(name,"_Controls_matched") := "Controls_matched", !!paste0(name,"_Cases_matched") := "Cases_matched")
   } else {
     # Merge all the tables --- Long covid
     x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>

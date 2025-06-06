@@ -426,5 +426,97 @@ y |>
 
 saveRDS(y, paste0(dir_results,"/Tables/BaselineCharacteristics_clustering.rds"))
 
+
+
+
+
+
+
+
+
+# Matching code
+library(MatchIt)
+
+# 0 for controls, 1 for cases
+data_complete <- longCovid_cases %>%
+  dplyr::mutate(group = 1) %>%
+  dplyr::union_all(
+    longCovid_controls %>%
+      dplyr::mutate(group = 0)
+  ) %>%
+  # dplyr::union_all(
+  #   longCovid_random %>%
+  #     dplyr::mutate(group = "random")
+  # ) %>%
+  dplyr::left_join(
+    baselineCharacteristics,
+    by = "eid"
+  )
+
+# Assuming 'group' is your binary grouping variable (e.g., treatment vs control)
+match_data <- matchit(group ~ sex + year_of_birth + ethnic_background + body_mass_index + smoking_status + index_of_multiple_deprivation, 
+                      data = data_complete, method = "nearest")
+
+matched_data <- match.data(match_data)
+
+do_clustering(matched_data %>%
+                dplyr::filter(group == 1) %>%
+                dplyr::select(-c("group", "sex", "year_of_birth", "ethnic_background",
+                                 "body_mass_index", "smoking_status", "index_of_multiple_deprivation",
+                                 "distance", "weights", "subclass")), paste0(dir_results,"/Clustering_cases_matched"), "cases_matched")
+do_clustering(matched_data %>%
+                dplyr::filter(group == 0) %>%
+                dplyr::select(-c("group", "sex", "year_of_birth", "ethnic_background",
+                                 "body_mass_index", "smoking_status", "index_of_multiple_deprivation",
+                                 "distance", "weights", "subclass")), paste0(dir_results,"/Clustering_controls_matched"), "controls_matched")
+
+# characteristics for whole cohorts again
+# Long covid clustering
+x <- matched_data %>%
+  rename("state" = "group") %>%
+  dplyr::select(-c("sex", "year_of_birth", "ethnic_background",
+                   "body_mass_index", "smoking_status", "index_of_multiple_deprivation",
+                   "distance", "weights", "subclass"))
+
+name <- "Long COVID clustering matched"
+name_cohort <- c("Controls_matched", "Cases_matched")
+longCovid_clust_matched <- tableOneStep1(x, baselineCharacteristics, biomarkers, name, name_cohort)
+
+# Merge all tables ----
+y <- longCovid_clust_matched |>
+  mutate(order = row_number()) |>
+  dplyr::select(-c("order")) |>
+  mutate(`Risk factor` = if_else(`Risk factor` == "Sociodemographics factors", "Sociodemographic factors",`Risk factor`))
+
+y <- y |>
+  filter(`Risk factor` == "N") |>
+  rbind(
+    y |>
+      filter(`Risk factor` != "N")
+  )
+
+merge <- c(1:nrow(y))[y$`Risk factor` %in% c("Sociodemographic factors", "Comorbidities [Cases (%)]", "Biomarkers [Mean (SD)]")]
+row_fill <- c(1:nrow(y))[!y$`Long COVID clustering_Controls_matched` == " "]
+y <- y |>
+  flextable() |>
+  span_header() |>
+  bold(i = 1, part = "header") |>
+  bold(i = 2, part = "header") |>
+  align(j = c(2,3), align = "center", part = "all") |>
+  width(j = 1, width = 5, unit = "cm") |>
+  bg(bg = "#F2F2F2", i = 1, j = c(2,3), part = "header") 
+
+for(ii in merge){
+  y <- y |>
+    merge_at(i = ii, j = c(1:3)) |>
+    hline(i = ii-1, border = fp_border(color = "black")) |>
+    bold(i = ii)
+}
+
+y |>
+  save_as_docx(path = paste0(dir_results, "/Tables/BaselineCharacteristics_clustering_matched.docx"))
+
+saveRDS(y, paste0(dir_results,"/Tables/BaselineCharacteristics_clustering_matched.rds"))
+
 rm(list = c("baselineCharacteristics", "biomarkers","x","name","name_cohort",
-            "longCovid_cohort","pacs_cohort","y", "merge", "row_fill"))
+            "longCovid_cohort","pacs_cohort","y", "merge", "row_fill", "longCovid_clust_matched", "matched_data"))
