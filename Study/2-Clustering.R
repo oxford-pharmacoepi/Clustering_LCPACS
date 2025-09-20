@@ -1,11 +1,11 @@
 # On to clustering
-longCovid_cases <- read.csv(paste0(dir_results,"/longcovid_cases_clustering.csv")) |>
+longCovid_cases <- read.csv(paste0(dir_clust_results,"/longcovid_cases_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
-longCovid_controls <- read.csv(paste0(dir_results,"/longcovid_controls_clustering.csv")) |>
+longCovid_controls <- read.csv(paste0(dir_clust_results,"/longcovid_controls_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
-longCovid_random <- read.csv(paste0(dir_results,"/longcovid_random_clustering.csv")) |>
+longCovid_random <- read.csv(paste0(dir_clust_results,"/longcovid_random_clustering.csv")) |>
   as_tibble() |>
   dplyr::select(-"X")
 
@@ -13,9 +13,9 @@ names_symptoms <- colnames(longCovid_cases %>%
                              dplyr::select(-c(eid, specdate, questionnaire_started, symptom, length)))
 
 # Load characteristics data ----
-baselineCharacteristics <- as_tibble(read.csv(paste0(dir_results,"/CleanData_baselineCharacteristics.csv"))) |> dplyr::select(-c("X"))
-biomarkers <- as_tibble(read.csv(paste0(dir_results,"/CleanData_biomarkers.csv")))  |> dplyr::select(-c("X"))
-comorbidities <- as_tibble(read.csv(paste0(dir_results,"/CleanData_comorbidities.csv")))  |> dplyr::select(-c("X"))
+baselineCharacteristics <- as_tibble(read.csv(paste0(dir_clust_results,"/CleanData_baselineCharacteristics.csv"))) |> dplyr::select(-c("X"))
+biomarkers <- as_tibble(read.csv(paste0(dir_clust_results,"/CleanData_biomarkers.csv")))  |> dplyr::select(-c("X"))
+comorbidities <- as_tibble(read.csv(paste0(dir_clust_results,"/CleanData_comorbidities.csv")))  |> dplyr::select(-c("X"))
 
 run_clustering <- function(mydata,numclust, numsymp, counter, namefolder, results, nameclust) {
   output_clustering_w <- file.path(namefolder,paste0(numclust,"_clust_",numsymp,"_symp"))
@@ -281,9 +281,9 @@ run_clustering <- function(mydata,numclust, numsymp, counter, namefolder, result
       }
       
       y |>
-        save_as_docx(path = paste0(dir_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.docx"))
+        save_as_docx(path = paste0(dir_clust_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.docx"))
       
-      saveRDS(y, paste0(dir_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.rds"))
+      saveRDS(y, paste0(dir_clust_results, "/Tables/Clust_",nameclust,"_BaselineCharacteristics.rds"))
       
       rm(list = c("baselineCharacteristics", "biomarkers","x","name","name_cohort",
                   "longCovid_cohort","pacs_cohort","y", "merge", "row_fill"))
@@ -373,9 +373,9 @@ do_clustering <- function(cohort, foldername, nameclust) {
   write.csv(membership(clusters), file = here::here(foldername, "Walktrap.csv"))
 }
 
-do_clustering(longCovid_cases, paste0(dir_results,"/Clustering_cases"), "cases")
-do_clustering(longCovid_controls, paste0(dir_results,"/Clustering_controls"), "controls")
-do_clustering(longCovid_random, paste0(dir_results,"/Clustering_random"), "random")
+do_clustering(longCovid_cases, paste0(dir_clust_results,"/Clustering_cases"), "cases")
+do_clustering(longCovid_controls, paste0(dir_clust_results,"/Clustering_controls"), "controls")
+do_clustering(longCovid_random, paste0(dir_clust_results,"/Clustering_random"), "random")
 
 # Table ones for the whole clustering cohorts (cases and controls)
 
@@ -422,17 +422,9 @@ for(ii in merge){
 }
 
 y |>
-  save_as_docx(path = paste0(dir_results, "/Tables/BaselineCharacteristics_clustering.docx"))
+  save_as_docx(path = paste0(dir_clust_results, "/Tables/BaselineCharacteristics_clustering.docx"))
 
-saveRDS(y, paste0(dir_results,"/Tables/BaselineCharacteristics_clustering.rds"))
-
-
-
-
-
-
-
-
+saveRDS(y, paste0(dir_clust_results,"/Tables/BaselineCharacteristics_clustering.rds"))
 
 # Matching code
 library(MatchIt)
@@ -463,12 +455,12 @@ do_clustering(matched_data %>%
                 dplyr::filter(group == 1) %>%
                 dplyr::select(-c("group", "sex", "year_of_birth", "ethnic_background",
                                  "body_mass_index", "smoking_status", "index_of_multiple_deprivation",
-                                 "distance", "weights", "subclass")), paste0(dir_results,"/Clustering_cases_matched"), "cases_matched")
+                                 "distance", "weights", "subclass")), paste0(dir_clust_results,"/Clustering_cases_matched"), "cases_matched")
 do_clustering(matched_data %>%
                 dplyr::filter(group == 0) %>%
                 dplyr::select(-c("group", "sex", "year_of_birth", "ethnic_background",
                                  "body_mass_index", "smoking_status", "index_of_multiple_deprivation",
-                                 "distance", "weights", "subclass")), paste0(dir_results,"/Clustering_controls_matched"), "controls_matched")
+                                 "distance", "weights", "subclass")), paste0(dir_clust_results,"/Clustering_controls_matched"), "controls_matched")
 
 # characteristics for whole cohorts again
 # Long covid clustering
@@ -514,9 +506,9 @@ for(ii in merge){
 }
 
 y |>
-  save_as_docx(path = paste0(dir_results, "/Tables/BaselineCharacteristics_clustering_matched.docx"))
+  save_as_docx(path = paste0(dir_clust_results, "/Tables/BaselineCharacteristics_clustering_matched.docx"))
 
-saveRDS(y, paste0(dir_results,"/Tables/BaselineCharacteristics_clustering_matched.rds"))
+saveRDS(y, paste0(dir_clust_results,"/Tables/BaselineCharacteristics_clustering_matched.rds"))
 
 rm(list = c("baselineCharacteristics", "biomarkers","x","name","name_cohort",
             "longCovid_cohort","pacs_cohort","y", "merge", "row_fill", "longCovid_clust_matched", "matched_data"))

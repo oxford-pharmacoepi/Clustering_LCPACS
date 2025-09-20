@@ -82,6 +82,77 @@ loadHesData <- function(){
   return(hes)
 }
 
+loadUKBData <- function(dir_data){
+  bd <- read.table(paste0(dir_data,"/UKBiobank/ukb678283.tab"), header=TRUE, sep="\t")
+  bd$f.28001.0.0 <- as.Date(bd$f.28001.0.0)
+  bd$f.28001.1.0 <- as.Date(bd$f.28001.1.0)
+  bd$f.28001.2.0 <- as.Date(bd$f.28001.2.0)
+  bd$f.28001.3.0 <- as.Date(bd$f.28001.3.0)
+  bd$f.28001.4.0 <- as.Date(bd$f.28001.4.0)
+  bd$f.28001.5.0 <- as.Date(bd$f.28001.5.0)
+  bd$f.28005.0.0 <- as.Date(bd$f.28005.0.0)
+  bd$f.28005.1.0 <- as.Date(bd$f.28005.1.0)
+  bd$f.28005.2.0 <- as.Date(bd$f.28005.2.0)
+  bd$f.28005.3.0 <- as.Date(bd$f.28005.3.0)
+  bd$f.28005.4.0 <- as.Date(bd$f.28005.4.0)
+  bd$f.28005.5.0 <- as.Date(bd$f.28005.5.0)
+  bd$f.28006.0.0 <- as.Date(bd$f.28006.0.0)
+  bd$f.28006.1.0 <- as.Date(bd$f.28006.1.0)
+  bd$f.28006.2.0 <- as.Date(bd$f.28006.2.0)
+  bd$f.28006.3.0 <- as.Date(bd$f.28006.3.0)
+  bd$f.28006.4.0 <- as.Date(bd$f.28006.4.0)
+  bd$f.28006.5.0 <- as.Date(bd$f.28006.5.0)
+  bd$f.28008.0.0 <- as.Date(bd$f.28008.0.0)
+  bd$f.28008.1.0 <- as.Date(bd$f.28008.1.0)
+  bd$f.28008.2.0 <- as.Date(bd$f.28008.2.0)
+  bd$f.28008.3.0 <- as.Date(bd$f.28008.3.0)
+  bd$f.28008.4.0 <- as.Date(bd$f.28008.4.0)
+  bd$f.28008.5.0 <- as.Date(bd$f.28008.5.0)
+  bd$f.28009.0.0 <- as.Date(bd$f.28009.0.0)
+  bd$f.28009.1.0 <- as.Date(bd$f.28009.1.0)
+  bd$f.28009.2.0 <- as.Date(bd$f.28009.2.0)
+  bd$f.28009.3.0 <- as.Date(bd$f.28009.3.0)
+  bd$f.28009.4.0 <- as.Date(bd$f.28009.4.0)
+  bd$f.28009.5.0 <- as.Date(bd$f.28009.5.0)
+  bd$f.28030.0.0 <- as.Date(bd$f.28030.0.0)
+  bd$f.28030.1.0 <- as.Date(bd$f.28030.1.0)
+  bd$f.28030.2.0 <- as.Date(bd$f.28030.2.0)
+  bd$f.28030.3.0 <- as.Date(bd$f.28030.3.0)
+  bd$f.28030.4.0 <- as.Date(bd$f.28030.4.0)
+  bd$f.28030.5.0 <- as.Date(bd$f.28030.5.0)
+  bd$f.28030.6.0 <- as.Date(bd$f.28030.6.0)
+  bd$f.28031.0.0 <- as.Date(bd$f.28031.0.0)
+  bd$f.28031.1.0 <- as.Date(bd$f.28031.1.0)
+  bd$f.28031.2.0 <- as.Date(bd$f.28031.2.0)
+  bd$f.28031.3.0 <- as.Date(bd$f.28031.3.0)
+  bd$f.28031.4.0 <- as.Date(bd$f.28031.4.0)
+  bd$f.28031.5.0 <- as.Date(bd$f.28031.5.0)
+  bd$f.28032.0.0 <- as.Date(bd$f.28032.0.0)
+  bd$f.28032.1.0 <- as.Date(bd$f.28032.1.0)
+  bd$f.28032.2.0 <- as.Date(bd$f.28032.2.0)
+  bd$f.28032.3.0 <- as.Date(bd$f.28032.3.0)
+  bd$f.28032.4.0 <- as.Date(bd$f.28032.4.0)
+  bd$f.28032.5.0 <- as.Date(bd$f.28032.5.0)
+  bd$f.28032.6.0 <- as.Date(bd$f.28032.6.0)
+  bd$f.28032.7.0 <- as.Date(bd$f.28032.7.0)
+  bd$f.28032.8.0 <- as.Date(bd$f.28032.8.0)
+  bd$f.28033.2.0 <- as.Date(bd$f.28033.2.0)
+  bd$f.28033.3.0 <- as.Date(bd$f.28033.3.0)
+  bd$f.28033.4.0 <- as.Date(bd$f.28033.4.0)
+  bd$f.28033.5.0 <- as.Date(bd$f.28033.5.0)
+  bd$f.28033.6.0 <- as.Date(bd$f.28033.6.0)
+  bd$f.28141.0.0 <- as.Date(bd$f.28141.0.0)
+  bd$f.28142.0.0 <- as.Date(bd$f.28142.0.0)
+  bd$f.28143.0.0 <- as.Date(bd$f.28143.0.0)
+  bd$f.28146.0.0 <- as.Date(bd$f.28146.0.0)
+  bd$f.28166.0.0 <- as.Date(bd$f.28166.0.0)
+  bd$f.28167.0.0 <- as.Date(bd$f.28167.0.0)
+  bd$f.28754.0.0 <- as.Date(bd$f.28754.0.0)
+  bd$f.28756.0.0 <- as.Date(bd$f.28756.0.0)
+  
+  return(bd)
+}
+
 addCoding <- function(bd, variable){
   coding <- tibble(read.table(paste0("UKBiobank/",variable,"_coding.tsv"), header = TRUE, sep = "\t")) |>
     dplyr::select(!!variable := "coding", "meaning")
@@ -960,81 +1031,143 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
       mutate(order = row_number())
   }
 
-  if(length(demographics_list) == 2 && name_cohort[[1]] == "Controls") {
-    # Merge all the tables --- Long covid
-    x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls" = " ", "order" = 0, "Cases" = " ") |>
+  # if(length(demographics_list) == 2 && grepl("Controls",name_cohort[[1]])) {
+  #   # Merge all the tables --- Long covid
+  #   x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls" = " ", "order" = 0, "Cases" = " ") |>
+  #     rbind(
+  #       demographics_list[[1]] |>
+  #         inner_join(demographics_list[[2]], by = c("order","Risk factor"))
+  #     ) |>
+  #     add_row(
+  #       "Risk factor" = "Comorbidities [Cases (%)]", "Controls" = " ", "order" = 0, "Cases" = " ") |>
+  #     rbind(
+  #       commorbidities_list[[1]] |>
+  #         inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     add_row("Risk factor" = "Biomarkers [Mean (SD)]","Controls" = " ","order" = 0,"Cases" = " ") |>
+  #     rbind(
+  #       biomarkers_list[[1]] |>
+  #         inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+  #     dplyr::select(-c("order")) |>
+  #     rename(!!paste0(name,"_Controls") := "Controls", !!paste0(name,"_Cases") := "Cases")
+  # } else if (length(demographics_list) == 2 && name_cohort[[1]] == "Controls_matched") {
+  #   # Merge all the tables --- Long covid
+  #   x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
+  #     rbind(
+  #       demographics_list[[1]] |>
+  #         inner_join(demographics_list[[2]], by = c("order","Risk factor"))
+  #     ) |>
+  #     add_row(
+  #       "Risk factor" = "Comorbidities [Cases (%)]", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
+  #     rbind(
+  #       commorbidities_list[[1]] |>
+  #         inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     add_row("Risk factor" = "Biomarkers [Mean (SD)]","Controls_matched" = " ","order" = 0,"Cases_matched" = " ") |>
+  #     rbind(
+  #       biomarkers_list[[1]] |>
+  #         inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+  #     dplyr::select(-c("order")) |>
+  #     rename(!!paste0(name,"_Controls_matched") := "Controls_matched", !!paste0(name,"_Cases_matched") := "Cases_matched")
+  # } else {
+  #   # Merge all the tables --- Long covid
+  #   x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>
+  #     rbind(
+  #       demographics_list[[1]] |>
+  #         inner_join(demographics_list[[2]], by = c("order","Risk factor")) |>
+  #         inner_join(demographics_list[[3]], by = c("order","Risk factor"))
+  #     ) |>
+  #     add_row(
+  #       "Risk factor" = "Comorbidities [Cases (%)]", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>
+  #     rbind(
+  #       commorbidities_list[[1]] |>
+  #         inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`)) |>
+  #         inner_join(commorbidities_list[[3]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     add_row("Risk factor" = "Biomarkers [Mean (SD)]","Cluster 1" = " ","order" = 0,"Cluster 2" = " ","Cluster 3" = " ") |>
+  #     rbind(
+  #       biomarkers_list[[1]] |>
+  #         inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`)) |>
+  #         inner_join(biomarkers_list[[3]], by = c("order", "Risk factor")) |>
+  #         mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+  #     ) |>
+  #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+  #     dplyr::select(-c("order")) |>
+  #     rename(!!paste0(name,"_Cluster 1") := "Cluster 1", !!paste0(name,"_Cluster 2") := "Cluster 2", !!paste0(name,"_Cluster 3") := "Cluster 3")
+  # }
+  
+  
+  if (length(demographics_list) == 2) {
+    # Case/Control comparison (any labels, e.g. "Controls (COVID)" / "Cases (cluster 1)")
+    x_cohort <- tibble(
+      "Risk factor" = "Sociodemographic factors",
+      !!name_cohort[[1]] := " ",
+      order = 0,
+      !!name_cohort[[2]] := " "
+    ) |>
       rbind(
-        demographics_list[[1]] |>
-          inner_join(demographics_list[[2]], by = c("order","Risk factor"))
+        demographics_list[[1]] |> inner_join(demographics_list[[2]], by = c("order","Risk factor"))
       ) |>
       add_row(
-        "Risk factor" = "Comorbidities [Cases (%)]", "Controls" = " ", "order" = 0, "Cases" = " ") |>
-      rbind(
-        commorbidities_list[[1]] |>
-          inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
-          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
+        "Risk factor" = "Comorbidities [Cases (%)]",
+        !!name_cohort[[1]] := " ",
+        order = 0,
+        !!name_cohort[[2]] := " "
       ) |>
-      add_row("Risk factor" = "Biomarkers [Mean (SD)]","Controls" = " ","order" = 0,"Cases" = " ") |>
       rbind(
-        biomarkers_list[[1]] |>
-          inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
+        commorbidities_list[[1]] |> inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
-      ) |>
-      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
-      dplyr::select(-c("order")) |>
-      rename(!!paste0(name,"_Controls") := "Controls", !!paste0(name,"_Cases") := "Cases")
-  } else if (length(demographics_list) == 2 && name_cohort[[1]] == "Controls_matched") {
-    # Merge all the tables --- Long covid
-    x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
-      rbind(
-        demographics_list[[1]] |>
-          inner_join(demographics_list[[2]], by = c("order","Risk factor"))
       ) |>
       add_row(
-        "Risk factor" = "Comorbidities [Cases (%)]", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
+        "Risk factor" = "Biomarkers [Mean (SD)]",
+        !!name_cohort[[1]] := " ",
+        order = 0,
+        !!name_cohort[[2]] := " "
+      ) |>
       rbind(
-        commorbidities_list[[1]] |>
-          inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
+        biomarkers_list[[1]] |> inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
       ) |>
-      add_row("Risk factor" = "Biomarkers [Mean (SD)]","Controls_matched" = " ","order" = 0,"Cases_matched" = " ") |>
-      rbind(
-        biomarkers_list[[1]] |>
-          inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
-          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
-      ) |>
-      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
       dplyr::select(-c("order")) |>
-      rename(!!paste0(name,"_Controls_matched") := "Controls_matched", !!paste0(name,"_Cases_matched") := "Cases_matched")
-  } else {
-    # Merge all the tables --- Long covid
-    x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>
+      rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
+    
+  } else if (length(demographics_list) == 3) {
+    # 3 clusters (any labels, e.g. "Cluster 1", "Cluster 2", "Cluster 3")
+    x_cohort <- tibble(
+      "Risk factor" = "Sociodemographic factors",
+      !!!setNames(rep(" ",3), name_cohort),
+      order = 0
+    ) |>
       rbind(
-        demographics_list[[1]] |>
-          inner_join(demographics_list[[2]], by = c("order","Risk factor")) |>
-          inner_join(demographics_list[[3]], by = c("order","Risk factor"))
+        reduce(demographics_list, ~ inner_join(.x, .y, by = c("order","Risk factor")))
       ) |>
-      add_row(
-        "Risk factor" = "Comorbidities [Cases (%)]", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>
+      add_row("Risk factor" = "Comorbidities [Cases (%)]", !!!setNames(rep(" ",3), name_cohort), order = 0) |>
       rbind(
-        commorbidities_list[[1]] |>
-          inner_join(commorbidities_list[[2]], by = c("order", "Risk factor")) |>
-          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`)) |>
-          inner_join(commorbidities_list[[3]], by = c("order", "Risk factor")) |>
+        reduce(commorbidities_list, ~ inner_join(.x, .y, by = c("order","Risk factor"))) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
       ) |>
-      add_row("Risk factor" = "Biomarkers [Mean (SD)]","Cluster 1" = " ","order" = 0,"Cluster 2" = " ","Cluster 3" = " ") |>
+      add_row("Risk factor" = "Biomarkers [Mean (SD)]", !!!setNames(rep(" ",3), name_cohort), order = 0) |>
       rbind(
-        biomarkers_list[[1]] |>
-          inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
-          mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`)) |>
-          inner_join(biomarkers_list[[3]], by = c("order", "Risk factor")) |>
+        reduce(biomarkers_list, ~ inner_join(.x, .y, by = c("order","Risk factor"))) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
       ) |>
-      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
+      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
       dplyr::select(-c("order")) |>
-      rename(!!paste0(name,"_Cluster 1") := "Cluster 1", !!paste0(name,"_Cluster 2") := "Cluster 2", !!paste0(name,"_Cluster 3") := "Cluster 3")
+      rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
   }
+  
  
 
   return(x_cohort)
@@ -1199,6 +1332,30 @@ getUngroupedForestPlot <- function(dt, dir_results, cohort_name, nam, l1, col, .
     add_border(part = "header", row = 1, where = "bottom")
 
   return(p)
+}
+
+addGwasCovariates <- function(table, ukb){
+  table |>
+    left_join(
+      ukb |>
+        as_tibble() |>
+        dplyr::select("eid" = "f.eid",
+               "year_of_birth" = "f.34.0.0",
+               "sex"   = "f.31.0.0",
+               "batch" = "f.22000.0.0",
+               "pc1"  = "f.22009.0.1", "pc2" = "f.22009.0.2", "pc3" = "f.22009.0.3",
+               "pc4"  = "f.22009.0.4", "pc5" = "f.22009.0.5", "pc6" = "f.22009.0.6",
+               "pc7"  = "f.22009.0.7", "pc8" = "f.22009.0.8", "pc9" = "f.22009.0.9",
+               "pc10" = "f.22009.0.10", "pc11" = "f.22009.0.11",  "pc12" = "f.22009.0.12", 
+               "pc13" = "f.22009.0.13","pc14" = "f.22009.0.14", "pc15" = "f.22009.0.15", 
+               "pc16" = "f.22009.0.16", "pc17" = "f.22009.0.17", "pc18" = "f.22009.0.18",
+               "pc19" = "f.22009.0.19","pc20" = "f.22009.0.20",
+               "genetic_sex" = "f.22001.0.0",
+               "sex_chromosome_aneuploidy" = "f.22019.0.0",
+               "heterozygosity" = "f.22027.0.0",
+               "genetic_ethnic_grouping" = "f.22006.0.0"),
+      by = "eid"
+    )
 }
 
 getManhattanPlot <- function(gwas, 

@@ -169,9 +169,9 @@ lc_controls <- lc_controls |>
   recordAttrition("Removed people who are in the case cohort")
 
 # Save attrition
-write.csv(attr(longCovid_cases, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_cases.csv"))
-write.csv(attr(longCovid_controls, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_controls.csv"))
-write.csv(attr(lc_controls, "cohort_attrition"), paste0(dir_results,"/attrition_longcovid_controls_clustering.csv"))
+write.csv(attr(longCovid_cases, "cohort_attrition"), paste0(dir_clust_results,"/attrition_longcovid_cases.csv"))
+write.csv(attr(longCovid_controls, "cohort_attrition"), paste0(dir_clust_results,"/attrition_longcovid_controls.csv"))
+write.csv(attr(lc_controls, "cohort_attrition"), paste0(dir_clust_results,"/attrition_longcovid_controls_clustering.csv"))
 
 set.seed(11)
 # Random sample roughly half the size of both cohorts combined
@@ -179,8 +179,6 @@ longCovid_random <- longCovid_cases |>
   dplyr::union_all(lc_controls) |>
   dplyr::slice_sample(n = 21962)
 
-write.csv(lc_controls, paste0(dir_results,"/longcovid_controls_clustering.csv"))
-write.csv(longCovid_cases, paste0(dir_results,"/longcovid_cases_clustering.csv"))
-write.csv(longCovid_random, paste0(dir_results,"/longcovid_random_clustering.csv"))
-
-# Check again same here as in Marta's GitHub
+write.csv(lc_controls, paste0(dir_clust_results,"/longcovid_controls_clustering.csv"))
+write.csv(longCovid_cases, paste0(dir_clust_results,"/longcovid_cases_clustering.csv"))
+write.csv(longCovid_random, paste0(dir_clust_results,"/longcovid_random_clustering.csv"))
