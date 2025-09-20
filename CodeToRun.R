@@ -66,7 +66,7 @@ source(here("Study/3-GWASFiles.R"))
 ## PART 2: After GWAS, check all results
 # Post-process results. 
 # Needs GWAS summary statistics inside dir_gwas_results.
-# Needs also "GCF_000001405.40.gz" VCF file to add rsIDs to GrCh38 chr/pos coordinates
+# Needs also "GCF_000001405.40.gz" VCF file to add rsIDs to GRCh38 chr/pos coordinates
 source(here("Study/4-PostProcessing.R"))
 # Checks FUMA output and analyses traits. 
 # Needs each GWAS FUMA output in its own folder (snps, leadSNPs, genes, annot) in dir_gwas_results. 
