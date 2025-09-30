@@ -1,10 +1,10 @@
 # Get a big gene table from FUMA for all GWASes run
 
 # Clust 1 vs 2&3
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vs23", "clust1vs23_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C1vs23","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C1vs23","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C1vs23","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vs23/", "clust1vs23_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C1vs23/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C1vs23/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C1vs23/","snps.txt"))
 
 results1vs23 <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -19,10 +19,10 @@ results1vs23 <- leads |>
                      dplyr::select(rsID, func))
 
 # Clust 2 vs 1&3
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vs13", "clust2vs13_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C2vs13","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C2vs13","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C2vs13","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vs13/", "clust2vs13_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C2vs13/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C2vs13/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C2vs13/","snps.txt"))
 
 results2vs13 <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -37,10 +37,10 @@ results2vs13 <- leads |>
                      dplyr::select(rsID, func))
 
 # Clust 3 vs 1&2
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vs12", "clust3vs12_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C3vs12","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C3vs12","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C3vs12","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vs12/", "clust3vs12_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C3vs12/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C3vs12/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C3vs12/","snps.txt"))
 
 results3vs12 <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -55,10 +55,10 @@ results3vs12 <- leads |>
                      dplyr::select(rsID, func))
 
 # Clust 1 vs no
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vsno", "clust1vsno_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C1vsno","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C1vsno","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C1vsno","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vsno/", "clust1vsno_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C1vsno/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C1vsno/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C1vsno/","snps.txt"))
 
 results1vsno <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -67,16 +67,16 @@ results1vsno <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 1", controls = "no COVID-19",
+  dplyr::mutate(cases = "Clust 1", controls = "COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
 
 # Clust 2 vs no
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsno", "clust2vsno_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C2vsno","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C2vsno","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C2vsno","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsno/", "clust2vsno_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C2vsno/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C2vsno/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C2vsno/","snps.txt"))
 
 results2vsno <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -85,16 +85,16 @@ results2vsno <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 2", controls = "no COVID-19",
+  dplyr::mutate(cases = "Clust 2", controls = "COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
 
 # Clust 3 vs no
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vsno", "clust3vsno_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C3vsno","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C3vsno","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C3vsno","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vsno/", "clust3vsno_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C3vsno/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C3vsno/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C3vsno/","snps.txt"))
 
 results3vsno <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -103,16 +103,16 @@ results3vsno <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 3", controls = "no COVID-19",
+  dplyr::mutate(cases = "Clust 3", controls = "COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
 
 # Clust 1 vs all
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vsall", "clust1vsall_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C1vsall","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C1vsall","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C1vsall","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust1vsall/", "clust1vsall_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C1vsall/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C1vsall/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C1vsall/","snps.txt"))
 
 results1vsall <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -121,16 +121,16 @@ results1vsall <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 1", controls = "Clust 2 + Clust 3 + no COVID-19",
+  dplyr::mutate(cases = "Clust 1", controls = "Clust 2 + Clust 3 + COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
 
 # Clust 2 vs all
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsall", "clust2vsall_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C2vsall","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C2vsall","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C2vsall","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsall/", "clust2vsall_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C2vsall/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C2vsall/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C2vsall/","snps.txt"))
 
 results2vsall <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -139,16 +139,16 @@ results2vsall <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 2", controls = "Clust 1 + Clust 3 + no COVID-19",
+  dplyr::mutate(cases = "Clust 2", controls = "Clust 1 + Clust 3 + COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
 
 # Clust 3 vs all
-input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vsall", "clust3vsall_FUMA.txt"))
-genes <- read_table(paste0(dir_gwas_results,"C3vsall","genes.txt"))
-leads <- read_table(paste0(dir_gwas_results,"C3vsall","leadSNPs.txt"))
-snps <- read_table(paste0(dir_gwas_results,"C3vsall","snps.txt"))
+input <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust3vsall/", "clust3vsall_FUMA.txt"))
+genes <- read_table(paste0(dir_gwas_results,"/C3vsall/","genes.txt"))
+leads <- read_table(paste0(dir_gwas_results,"/C3vsall/","leadSNPs.txt"))
+snps <- read_table(paste0(dir_gwas_results,"/C3vsall/","snps.txt"))
 
 results3vsall <- leads |>
   dplyr::left_join(input, by = c("rsID" = "RSID")) |>
@@ -157,7 +157,7 @@ results3vsall <- leads |>
   dplyr::full_join(genes |>
                      dplyr::select("rsID" = "IndSigSNPs", "gene" = "symbol", "type"),
                    by = "rsID") |>
-  dplyr::mutate(cases = "Clust 3", controls = "Clust 1 + Clust 2 + no COVID-19",
+  dplyr::mutate(cases = "Clust 3", controls = "Clust 1 + Clust 2 + COVID-19",
                 lead = dplyr::if_else(is.na(chr), "No", "Yes")) |>
   dplyr::left_join(snps |>
                      dplyr::select(rsID, func))
@@ -183,16 +183,16 @@ input2 <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vs13", "clust2vs13
 input3 <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsno", "clust2vsno_FUMA.txt"))
 input4 <- read_table(paste0(dir_gwas_results,"/GWAS/", "Clust2vsall", "clust2vsall_FUMA.txt"))
 
- refseq_map <- c(
-   "1"="NC_000001.11","2"="NC_000002.12","3"="NC_000003.12",
-   "4"="NC_000004.12","5"="NC_000005.10","6"="NC_000006.12",
-   "7"="NC_000007.14","8"="NC_000008.11","9"="NC_000009.12",
-   "10"="NC_000010.11","11"="NC_000011.10","12"="NC_000012.12",
-   "13"="NC_000013.11","14"="NC_000014.9","15"="NC_000015.10",
-   "16"="NC_000016.10","17"="NC_000017.11","18"="NC_000018.10",
-   "19"="NC_000019.10","20"="NC_000020.11","21"="NC_000021.9",
-   "22"="NC_000022.11","23"="NC_000023.11"
- )
+refseq_map <- c(
+  "1"="NC_000001.11","2"="NC_000002.12","3"="NC_000003.12",
+  "4"="NC_000004.12","5"="NC_000005.10","6"="NC_000006.12",
+  "7"="NC_000007.14","8"="NC_000008.11","9"="NC_000009.12",
+  "10"="NC_000010.11","11"="NC_000011.10","12"="NC_000012.12",
+  "13"="NC_000013.11","14"="NC_000014.9","15"="NC_000015.10",
+  "16"="NC_000016.10","17"="NC_000017.11","18"="NC_000018.10",
+  "19"="NC_000019.10","20"="NC_000020.11","21"="NC_000021.9",
+  "22"="NC_000022.11","23"="NC_000023.11"
+)
 
 non_lead_1_23 <- results |>
   dplyr::filter(is.na(chr), controls == "Clust 2 + Clust 3") |>
@@ -215,7 +215,7 @@ non_lead_2_13 <- results |>
   dplyr::select("chr",  "pos", "rsID", "P", "REF", "ALT", "OR", "SE", "gene", "type", "cases", "controls", "lead")
 
 non_lead_2_no <- results |>
-  dplyr::filter(is.na(chr), controls == "no COVID-19") |>
+  dplyr::filter(is.na(chr), controls == "COVID-19") |>
   dplyr::select(-c("chr", "pos", "P", "REF", "ALT", "OR", "SE")) |>
   tidyr::separate_rows(rsID, sep = ";") |>
   dplyr::left_join(input3, by = c("rsID" = "RSID")) |>
@@ -225,7 +225,7 @@ non_lead_2_no <- results |>
   dplyr::select("chr",  "pos", "rsID", "P", "REF", "ALT", "OR", "SE", "gene", "type", "cases", "controls", "lead")
 
 non_lead_2_all <- results |>
-  dplyr::filter(is.na(chr), controls == "Clust 1 + Clust 3 + no COVID-19") |>
+  dplyr::filter(is.na(chr), controls == "Clust 1 + Clust 3 + COVID-19") |>
   dplyr::select(-c("chr", "pos", "P", "REF", "ALT", "OR", "SE")) |>
   tidyr::separate_rows(rsID, sep = ";") |>
   dplyr::left_join(input4, by = c("rsID" = "RSID")) |>
@@ -319,19 +319,19 @@ traits_long_count <- traits_long %>%
   tally(name = "freq") %>%
   ungroup() %>%
   mutate(
-    control_type = if_else(controls == "no COVID-19", "no COVID-19", "Other subtypes"),
+    control_type = if_else(controls == "COVID-19", "COVID-19", "Other subtypes"),
     case_type = gsub("Clust", "Cluster", cases),
-    control_type = if_else(grepl("no COVID-19", controls) & control_type == "Other subtypes",
-                           "Other subtypes + no COVID-19", control_type)
+    control_type = if_else(grepl("COVID-19", controls) & control_type == "Other subtypes",
+                           "Other subtypes + COVID-19", control_type)
   )
 
 case_clusters <- c("Cluster 1", "Cluster 2", "Cluster 3")
-control_types <- c("Other subtypes", "Other subtypes + no COVID-19", "no COVID-19")
+control_types <- c("Other subtypes", "Other subtypes + COVID-19", "COVID-19")
 
 n_rows <- length(case_clusters)
 n_cols <- length(control_types)
 
-png(paste0(dir_gwas_results,"Traits","wordcloud_grid.png"), width = 1800, height = 1200)
+png(here(dir_gwas_results,"Traits","wordcloud_grid.png"), width = 1800, height = 1200)
 layout_matrix <- matrix(1:((n_rows+1)*(n_cols+1)), nrow = n_rows + 1, ncol = n_cols + 1, byrow = TRUE)
 layout(layout_matrix, widths = c(2, rep(6, n_cols)), heights = c(1.5, rep(6, n_rows)))
 par(mar = c(0,0,0,0))
@@ -385,7 +385,7 @@ trait_counts <- gwas %>%
   filter(`DISEASE/TRAIT` %in% traits_of_interest) %>%
   group_by(`DISEASE/TRAIT`) %>%
   tally() |>
-  rename("reported_traits" = "DISEASE/TRAIT")
+  dplyr::rename("reported_traits" = 'DISEASE/TRAIT')
 
 # Join back to main table
 traits_long_count <- traits_long_count %>%
@@ -425,7 +425,7 @@ p <- ggplot(top_traits, aes(x = freq_weight, y = reorder(reported_traits, freq_w
        title = "Top relevant traits per study (adjusted for GWAS catalog)", 
        size = "Count in study") +
   theme_bw()
-ggsave(paste0(dir_gwas_results,"Traits","top_traits_enrichment.png"), width = 30, height = 8, dpi = 300)
+ggsave(here(dir_gwas_results,"Traits","top_traits_enrichment.png"), width = 30, height = 8, dpi = 300)
 
 top_percent <- 0.1 # chan change for other % cutoff
 catalog_cutoff <- quantile(df$n, probs = 1 - top_percent, na.rm = TRUE)
@@ -440,7 +440,7 @@ top_traits_g1 <- df %>%
 
 # Plot
 p <- ggplot(top_traits_g1, aes(x = freq_weight, y = reorder(reported_traits, freq_weight),
-                            size = freq, color = freq_weight)) +
+                               size = freq, color = freq_weight)) +
   geom_point(alpha = 0.8) +
   facet_wrap(~study, scales = "free_y") +
   scale_color_viridis_c(option = "plasma") +
@@ -448,7 +448,7 @@ p <- ggplot(top_traits_g1, aes(x = freq_weight, y = reorder(reported_traits, fre
        title = "Top relevant traits per study (adjusted for GWAS catalog)", 
        size = "Count in study") +
   theme_bw()
-ggsave(paste0(dir_gwas_results,"Traits","top_traits_enrichment_cutoff.png"), width = 30, height = 8, dpi = 300)
+ggsave(here(dir_gwas_results,"Traits","top_traits_enrichment_cutoff.png"), width = 30, height = 8, dpi = 300)
 
 # Binomial cumulative procedure
 total_catalog_counts <- sum(trait_counts$n)

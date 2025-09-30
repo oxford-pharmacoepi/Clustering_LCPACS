@@ -607,3 +607,51 @@ table_combined %>%
   kable_styling(latex_options = c("hold_position", "scale_down")) %>%
   save_kable(file = paste0(dir_clust_results, "/Tables/", "Table1_15_rows.tex"))
 
+# As LaTeX ALL
+table_combined %>%
+  kable(format = "latex", booktabs = TRUE, escape = FALSE,
+        caption = "Table 1. First 15 baseline characteristics of all GWAS cohorts") %>%
+  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
+  save_kable(file = paste0(dir_clust_results, "/Tables/", "Table1_all_rows.tex"))
+
+
+# Add full PCC here
+longCovid_cases <- longCovid_cases |>
+  addGwasCovariates(ukb) |>
+  mutate("age_when_infected" = year(specdate) - year_of_birth) |>
+  mutate("age2" = age_when_infected^2) |>
+  mutate("agesex" = age_when_infected*sex) |>
+  dplyr::select(-c("year_of_birth")) |>
+  filter(genetic_sex == sex) |>
+  recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
+  filter(is.na(sex_chromosome_aneuploidy)) |>
+  recordAttrition("Restrict to people with no sex chromosome aneuploidy") |>
+  filter(is.na(heterozygosity)) |>
+  recordAttrition("Restrict to people that are no outliers for heterozygosity or missing rate")
+
+longCovid_casesvscontrols <- as.phe(longCovid_cases |> 
+                                      dplyr::mutate(state = 1) |>
+                                      dplyr::select("pid" = "eid", "state", "BC_age" = "age_when_infected", "BC_sex" = "sex", "BC_age2" = "age2", "BC_agesex" = "agesex", "batch", starts_with("pc")) |> 
+                                      dplyr::mutate("id" = pid) |> 
+                                      dplyr::relocate("pid") |>
+                                   union_all(
+                                     longCovid_controls %>%
+                                       dplyr::mutate(state = 0) |>
+                                       dplyr::select("pid" = "eid", "state", "BC_age" = "age_when_infected", "BC_sex" = "sex", "BC_age2" = "age2", "BC_agesex" = "agesex", "batch", starts_with("pc")) |> 
+                                       dplyr::mutate("id" = pid) |> 
+                                       dplyr::relocate("pid")
+                                   ), "pid", "id")
+
+write.table(longCovid_casesvscontrols |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id"), paste0(dir_clust_results,"/GWAS/","covariate_pccvscovid.txt"), row.names = FALSE, quote = FALSE)
+
+write.table(longCovid_casesvscontrols |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id") |> dplyr::select(c("FID", "IID")), paste0(dir_clust_results,"/GWAS/","sample_included_pccvscovid.txt"), row.names = FALSE, quote = FALSE)
+
+write.table(longCovid_casesvscontrols |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id") |> dplyr::select(c("FID", "IID", "state")), paste0(dir_clust_results,"/GWAS/","phenotype_pccvscovid.txt"), row.names = FALSE, quote = FALSE)
+
+
