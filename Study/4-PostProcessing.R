@@ -61,50 +61,100 @@ plot_qq <- function(gwas_data, output_name, x_lim = 6.5, y_lim = 8,
 # get all of the gwas results files for the chrom/positions available
 gwas <- read_table(paste0(dir_gwas_results,"/GWAS/clust1_vs23.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas2 <- read_table(paste0(dir_gwas_results,"/GWAS/clust2_vs13.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas3 <- read_table(paste0(dir_gwas_results,"/GWAS/clust3_vs12.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas4 <- read_table(paste0(dir_gwas_results,"/GWAS/clust1_vsno.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas5 <- read_table(paste0(dir_gwas_results,"/GWAS/clust2_vsno.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas6 <- read_table(paste0(dir_gwas_results,"/GWAS/clust3_vsno.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas7 <- read_table(paste0(dir_gwas_results,"/GWAS/clust1_vsall.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas8 <- read_table(paste0(dir_gwas_results,"/GWAS/clust2_vsall.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 gwas9 <- read_table(paste0(dir_gwas_results,"/GWAS/clust3_vsall.txt")) |>
   dplyr::filter(P < 0.05) |>
-  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "NON_EFFECT_ALLELE")) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwaspcc <- read_table(paste0(dir_gwas_results,"/GWAS/pcc_vscovid.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwaspccall <- read_table(paste0(dir_gwas_results,"/GWAS/pcc_vsall.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwaspccallfil <- read_table(paste0(dir_gwas_results,"/GWAS/pcc_vsallfil.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust1gp <- read_table(paste0(dir_gwas_results,"/GWAS/clust1_vsgp.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust2gp <- read_table(paste0(dir_gwas_results,"/GWAS/clust2_vsgp.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust3gp <- read_table(paste0(dir_gwas_results,"/GWAS/clust3_vsgp.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust1gpfil <- read_table(paste0(dir_gwas_results,"/GWAS/clust1_vsallfil.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust2gpfil <- read_table(paste0(dir_gwas_results,"/GWAS/clust2_vsallfil.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
+  dplyr::distinct()
+gwasclust3gpfil <- read_table(paste0(dir_gwas_results,"/GWAS/clust3_vsallfil.txt")) |>
+  dplyr::filter(P < 0.05) |>
+  dplyr::select(c("CHROM", "POSITION", "NON_EFFECT_ALLELE", "EFFECT_ALLELE")) |>
   dplyr::distinct()
 
-gwas_all <- gwas |>
-  dplyr::union_all(gwas2) |>
-  dplyr::union_all(gwas3) |>
-  dplyr::union_all(gwas4) |>
-  dplyr::union_all(gwas5) |>
-  dplyr::union_all(gwas6) |>
-  dplyr::union_all(gwas7) |>
-  dplyr::union_all(gwas8) |>
-  dplyr::union_all(gwas9) |>
+# gwas_all <- gwas |>
+#   dplyr::union_all(gwas2) |>
+#   dplyr::union_all(gwas3) |>
+#   dplyr::union_all(gwas4) |>
+#   dplyr::union_all(gwas5) |>
+#   dplyr::union_all(gwas6) |>
+#   dplyr::union_all(gwas7) |>
+#   dplyr::union_all(gwas8) |>
+#   dplyr::union_all(gwas9) |>
+#   dplyr::union_all(gwaspcc) |>
+#   dplyr::union_all(gwaspccall) |>
+#   dplyr::union_all(gwaspccallfil) |>
+#   dplyr::union_all(gwasclust1gp) |>
+#   dplyr::union_all(gwasclust2gp) |>
+#   dplyr::union_all(gwasclust3gp) |>
+#   dplyr::union_all(gwasclust1gpfil) |>
+#   dplyr::union_all(gwasclust2gpfil) |>
+#   dplyr::union_all(gwasclust3gpfil) |>
+#   dplyr::distinct()
+
+gwas_all <- gwasclust1gpfil |>
+  dplyr::union_all(gwasclust2gpfil) |>
+  dplyr::union_all(gwasclust3gpfil) |>
   dplyr::distinct()
 
 # path to the VCF
@@ -184,19 +234,62 @@ get_fuma_format <- function(gwas_data, output_file) {
     write.table(paste0(dir_gwas_results,"/GWAS/",output_file), row.names = FALSE, quote = FALSE)
 }
 
+# Function to get locus compare v2 format
+get_loc_format <- function(gwas_data, output_file) {
+  gwas_data$CHROM <- as.character(gwas_data$CHROM)
+  gwas_data$CHR_REFSEQ <- refseq_map[as.character(gwas_data$CHROM)]
+  
+  gwas_data_with_rsid <- gwas_data |>
+    dplyr::filter(P < 0.05) |>
+    left_join(allRsIds, by = c("CHR_REFSEQ", "POSITION")) %>%
+    filter(
+      (toupper(NON_EFFECT_ALLELE) == REF & toupper(EFFECT_ALLELE) == ALT) |
+        (toupper(NON_EFFECT_ALLELE) == ALT & toupper(EFFECT_ALLELE) == REF)
+    ) %>%
+    distinct()
+  
+  gwas_data_with_rsid  |>
+    dplyr::mutate(
+      variantID = paste0("chr",CHROM,"_",POSITION,"_",EFFECT_ALLELE,"_",NON_EFFECT_ALLELE)
+    ) |>
+    dplyr::rename(
+      "rsID" = "RSID",
+      "chromosome" = "CHROM",
+      "base_position" = "POSITION",
+      "effect_allele" = "EFFECT_ALLELE",
+      "noneffect_allele" = "NON_EFFECT_ALLELE",
+      "p_value" = "P",
+      "standard_error" = "SE",
+      "beta" = "BETA"
+    ) |>
+    dplyr::select(c("rsID", "variantID", "chromosome", "base_position", "effect_allele",
+                    "noneffect_allele", "p_value", "standard_error", "beta")) |>
+    dplyr::filter(!is.na(rsID)) |>
+    write.table(paste0(dir_gwas_results,"/GWAS/",output_file), row.names = FALSE, quote = FALSE, sep = "\t",)
+}
+
 # Dataset list, apply to all
 datasets <- tibble::tribble(
-  ~file,                                 ~manhattan_png,     ~qq_png,        ~fuma_file,       ~filter_dragen,  ~pval_file,   ~outcome_folder, 
-  paste0(dir_gwas_results,"/GWAS/clust1_vs23.txt"), "clust1vs23.png", "clust1vs23_QQ.png", "clust1vs23_FUMA.txt", TRUE,    "clust1vs23_pval.txt",   "Clust1vs23",
-  paste0(dir_gwas_results,"/GWAS/clust2_vs13.txt"), "clust2vs13.png", "clust2vs13_QQ.png", "clust2vs13_FUMA.txt", FALSE,   "clust2vs13_pval.txt",   "Clust2vs13",   
-  paste0(dir_gwas_results,"/GWAS/clust3_vs12.txt"), "clust3vs12.png", "clust3vs12_QQ.png", "clust3vs12_FUMA.txt", FALSE,   "clust3vs12_pval.txt",   "Clust3vs12",
-  paste0(dir_gwas_results,"/GWAS/clust1_vsno.txt"), "clust1vsno.png", "clust1vsno_QQ.png", "clust1vsno_FUMA.txt", FALSE,   "clust1vsno_pval.txt",   "Clust1vsno",
-  paste0(dir_gwas_results,"/GWAS/clust2_vsno.txt"), "clust2vsno.png", "clust2vsno_QQ.png", "clust2vsno_FUMA.txt", TRUE,   "clust2vsno_pval.txt",   "Clust2vsno",
-  paste0(dir_gwas_results,"/GWAS/clust3_vsno.txt"), "clust3vsno.png", "clust3vsno_QQ.png", "clust3vsno_FUMA.txt", FALSE,   "clust3vsno_pval.txt",   "Clust3vsno",
-  paste0(dir_gwas_results,"/GWAS/clust1_vsall.txt"), "clust1vsall.png", "clust1vsall_QQ.png", "clust1vsall_FUMA.txt", FALSE,   "clust1vsall_pval.txt",   "Clust1vsall",
-  paste0(dir_gwas_results,"/GWAS/clust2_vsall.txt"), "clust2vsall.png", "clust2vsall_QQ.png", "clust2vsall_FUMA.txt", TRUE,   "clust2vsall_pval.txt",   "Clust2vsall",
-  paste0(dir_gwas_results,"/GWAS/clust3_vsall.txt"), "clust3vsall.png", "clust3vsall_QQ.png", "clust3vsall_FUMA.txt", FALSE,   "clust3vsall_pval.txt",   "Clust3vsall"
-)
+  ~file,                                 ~manhattan_png,     ~qq_png,        ~fuma_file,    ~loc_file,     ~filter_dragen,  ~pval_file,   ~outcome_folder, 
+#  paste0(dir_gwas_results,"/GWAS/clust1_vs23.txt"), "clust1vs23.png", "clust1vs23_QQ.png", "clust1vs23_FUMA.txt", "clust1vs23_loc.tsv", TRUE,    "clust1vs23_pval.txt",   "Clust1vs23",
+#  paste0(dir_gwas_results,"/GWAS/clust2_vs13.txt"), "clust2vs13.png", "clust2vs13_QQ.png", "clust2vs13_FUMA.txt", "clust2vs13_loc.tsv", FALSE,   "clust2vs13_pval.txt",   "Clust2vs13",   
+#  paste0(dir_gwas_results,"/GWAS/clust3_vs12.txt"), "clust3vs12.png", "clust3vs12_QQ.png", "clust3vs12_FUMA.txt", "clust3vs12_loc.tsv", FALSE,   "clust3vs12_pval.txt",   "Clust3vs12",
+#  paste0(dir_gwas_results,"/GWAS/clust1_vsno.txt"), "clust1vsno.png", "clust1vsno_QQ.png", "clust1vsno_FUMA.txt", "clust1vsno_loc.tsv", FALSE,   "clust1vsno_pval.txt",   "Clust1vsno",
+#  paste0(dir_gwas_results,"/GWAS/clust2_vsno.txt"), "clust2vsno.png", "clust2vsno_QQ.png", "clust2vsno_FUMA.txt", "clust2vsno_loc.tsv", TRUE,   "clust2vsno_pval.txt",   "Clust2vsno",
+#  paste0(dir_gwas_results,"/GWAS/clust3_vsno.txt"), "clust3vsno.png", "clust3vsno_QQ.png", "clust3vsno_FUMA.txt", "clust3vsno_loc.tsv", FALSE,   "clust3vsno_pval.txt",   "Clust3vsno",
+#  paste0(dir_gwas_results,"/GWAS/clust1_vsall.txt"), "clust1vsall.png", "clust1vsall_QQ.png", "clust1vsall_FUMA.txt", "clust1vsall_loc.tx FALSE,   "clust1vsall_pval.txt",   "Clust1vsall",
+#  paste0(dir_gwas_results,"/GWAS/clust2_vsall.txt"), "clust2vsall.png", "clust2vsall_QQ.png", "clust2vsall_FUMA.txt", "clust2vsall_loc.tsv", TRUE,   "clust2vsall_pval.txt",   "Clust2vsall",
+#  paste0(dir_gwas_results,"/GWAS/clust3_vsall.txt"), "clust3vsall.png", "clust3vsall_QQ.png", "clust3vsall_FUMA.txt", "clust3vsall_loc.tsv", FALSE,   "clust3vsall_pval.txt",   "Clust3vsall",
+#  paste0(dir_gwas_results,"/GWAS/pcc_vscovid.txt"), "pccvscovid.png", "pccvscovid_QQ.png", "pccvscovid_FUMA.txt", "pccvscovid_loc.tsv", FALSE,   "pccvscovid_pval.txt",   "PCCvsCovid",
+#  paste0(dir_gwas_results,"/GWAS/pcc_vsall.txt"), "pccvsall.png", "pccvsall_QQ.png", "pccvsall_FUMA.txt", "pccvsall_loc.tsv", FALSE,   "pccvsall_pval.txt",   "PCCvsAll",
+  paste0(dir_gwas_results,"/GWAS/pcc_vsallfil.txt"), "pccvsallfil.png", "pccvsallfil_QQ.png", "pccvsallfil_FUMA.txt", "pccvsallfil_loc.tsv", FALSE,   "pccvsallfil_pval.txt",   "PCCvsAllFiltered",
+#  paste0(dir_gwas_results,"/GWAS/clust1_vsgp.txt"), "clust1vsgp.png", "clust1vsgp_QQ.png", "clust1vsgp_FUMA.txt", "clust1vsgp_loc.tsv", FALSE,   "clust1vsgp_pval.txt",   "Clust1vsGP",
+#  paste0(dir_gwas_results,"/GWAS/clust2_vsgp.txt"), "clust2vsgp.png", "clust2vsgp_QQ.png", "clust2vsgp_FUMA.txt", "clust2vsgp_loc.tsv", FALSE,   "clust2vsgp_pval.txt",   "Clust2vsGP",
+#  paste0(dir_gwas_results,"/GWAS/clust3_vsgp.txt"), "clust3vsgp.png", "clust3vsgp_QQ.png", "clust3vsgp_FUMA.txt", "clust3vsgp_loc.tsv", FALSE,   "clust3vsgp_pval.txt",   "Clust3vsGP",
+#   paste0(dir_gwas_results,"/GWAS/clust1_vsallfil.txt"), "clust1vsallfil.png", "clust1vsallfil_QQ.png", "clust1vsallfil_FUMA.txt", "clust1vsallfil_loc.tsv", FALSE,   "clust1vsallfil_pval.txt",   "Clust1vsallfiltered",
+#   paste0(dir_gwas_results,"/GWAS/clust2_vsallfil.txt"), "clust2vsallfil.png", "clust2vsallfil_QQ.png", "clust2vsallfil_FUMA.txt", "clust2vsallfil_loc.tsv", FALSE,   "clust2vsallfil_pval.txt",   "Clust2vsallfiltered",
+#   paste0(dir_gwas_results,"/GWAS/clust3_vsallfil.txt"), "clust3vsallfil.png", "clust3vsallfil_QQ.png", "clust3vsallfil_FUMA.txt", "clust3vsallfil_loc.tsv", FALSE,   "clust3vsallfil_pval.txt",   "Clust3vsallfiltered",
+  )
 
 for (i in seq_len(nrow(datasets))) {
   params <- datasets[i, ]
@@ -213,71 +306,74 @@ for (i in seq_len(nrow(datasets))) {
   folder <- params$outcome_folder
   dir.create(paste0(dir_gwas_results,"/GWAS/",folder))
   
-  # Reduce dataset for plotting speed
-  gwas_reduced <- bind_rows(
-    gwas |> filter(LOG10P > 3),
-    gwas |> filter(LOG10P <= 3, LOG10P > 2) |> sample_frac(0.5),
-    gwas |> filter(LOG10P <= 2, LOG10P > 1) |> sample_frac(0.1),
-    gwas |> filter(LOG10P <= 1) |> sample_frac(0.01)
-  )
+  # # Reduce dataset for plotting speed
+  # gwas_reduced <- bind_rows(
+  #   gwas |> filter(LOG10P > 3),
+  #   gwas |> filter(LOG10P <= 3, LOG10P > 2) |> sample_frac(0.5),
+  #   gwas |> filter(LOG10P <= 2, LOG10P > 1) |> sample_frac(0.1),
+  #   gwas |> filter(LOG10P <= 1) |> sample_frac(0.01)
+  # )
+  # 
+  # # Calculate cumulative positions
+  # don <- gwas_reduced |>
+  #   group_by(CHROM) |>
+  #   summarise(chr_len = max(POSITION), .groups = "drop") %>%
+  #   mutate(tot = cumsum(as.numeric(chr_len)) - chr_len) %>%
+  #   dplyr::select(-chr_len) %>%
+  #   left_join(gwas_reduced, ., by = "CHROM") %>%
+  #   arrange(CHROM, POSITION) |>
+  #   mutate(BPcum = POSITION + tot)
+  # 
+  # axisdf <- don %>% group_by(CHROM) %>% 
+  #   summarise(center = (max(BPcum) + min(BPcum)) / 2, .groups = "drop")
+  # 
+  # # Plot
+  # colors <- c("#92C5DE", "#4393C3", "#2166AC")
+  # y_lim <- 9
+  # 
+  # p <- ggplot(don, aes(x = BPcum, y = LOG10P)) +
+  #   geom_point(aes(color = as.factor(CHROM)), size = 1) +
+  #   scale_color_manual(values = rep(colors, 22)) +
+  #   scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = c(0.015, 0.015)) +
+  #   scale_y_continuous(expand = c(0, 0), breaks = seq(0, y_lim, 2)) +
+  #   coord_cartesian(ylim = c(0, y_lim)) +
+  #   theme_bw() +
+  #   theme(
+  #     legend.position = "none",
+  #     panel.border = element_blank(),
+  #     panel.grid.major.x = element_blank(),
+  #     panel.grid.minor.x = element_blank(),
+  #     panel.grid.major.y = element_blank(),
+  #     panel.grid.minor.y = element_blank(),
+  #     axis.line.x = element_line(color = "black", linewidth = 0.5),
+  #     axis.line.y = element_line(color = "black", linewidth = 0.5),
+  #     axis.text.x = element_text(margin = margin(t = 1), size = 9),
+  #     axis.text.y = element_text(size = 10),
+  #     axis.title = element_text(size = 11)
+  #   ) +
+  #   geom_hline(yintercept = -log10(5e-8), color = "red", linewidth = 0.3) +
+  #   geom_hline(yintercept = -log10(5e-6), color = "grey", linewidth = 0.3) +
+  #   labs(x = 'Chromosome', y = expression(-log[10](P)))
+  # 
+  # ggsave(plot = p, width = 30, height = 15, dpi = 300, units = "cm",
+  #        filename = here("GWAS", params$outcome_folder, params$manhattan_png))
+  # # ggsave(plot = p, width = 30, height = 15, units = "cm", filename = here("GWAS", output_name), device = "pdf") # PDF version
+  # 
+  # pvals <- list(
+  #   suggestive = don |> filter(LOG10P > -log10(5e-06)),
+  #   genomewide = don |> filter(LOG10P > -log10(5e-08))
+  # )
+  # 
+  # write.csv(pvals$suggestive, paste0(dir_gwas_results,"/GWAS/", params$pval_file))
+  # 
+  # # QQ
+  # plot_qq(gwas, paste0(params$outcome_folder,"/", params$qq_png))
+  # 
+  # # FUMA
+  # get_fuma_format(gwas, paste0(params$outcome_folder,"/", params$fuma_file))
   
-  # Calculate cumulative positions
-  don <- gwas_reduced |>
-    group_by(CHROM) |>
-    summarise(chr_len = max(POSITION), .groups = "drop") %>%
-    mutate(tot = cumsum(as.numeric(chr_len)) - chr_len) %>%
-    dplyr::select(-chr_len) %>%
-    left_join(gwas_reduced, ., by = "CHROM") %>%
-    arrange(CHROM, POSITION) |>
-    mutate(BPcum = POSITION + tot)
-  
-  axisdf <- don %>% group_by(CHROM) %>% 
-    summarise(center = (max(BPcum) + min(BPcum)) / 2, .groups = "drop")
-  
-  # Plot
-  colors <- c("#92C5DE", "#4393C3", "#2166AC")
-  y_lim <- 9
-  
-  p <- ggplot(don, aes(x = BPcum, y = LOG10P)) +
-    geom_point(aes(color = as.factor(CHROM)), size = 1) +
-    scale_color_manual(values = rep(colors, 22)) +
-    scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = c(0.015, 0.015)) +
-    scale_y_continuous(expand = c(0, 0), breaks = seq(0, y_lim, 2)) +
-    coord_cartesian(ylim = c(0, y_lim)) +
-    theme_bw() +
-    theme(
-      legend.position = "none",
-      panel.border = element_blank(),
-      panel.grid.major.x = element_blank(),
-      panel.grid.minor.x = element_blank(),
-      panel.grid.major.y = element_blank(),
-      panel.grid.minor.y = element_blank(),
-      axis.line.x = element_line(color = "black", linewidth = 0.5),
-      axis.line.y = element_line(color = "black", linewidth = 0.5),
-      axis.text.x = element_text(margin = margin(t = 1), size = 9),
-      axis.text.y = element_text(size = 10),
-      axis.title = element_text(size = 11)
-    ) +
-    geom_hline(yintercept = -log10(5e-8), color = "red", linewidth = 0.3) +
-    geom_hline(yintercept = -log10(5e-6), color = "grey", linewidth = 0.3) +
-    labs(x = 'Chromosome', y = expression(-log[10](P)))
-  
-  ggsave(plot = p, width = 30, height = 15, dpi = 300, units = "cm",
-         filename = here("GWAS", params$outcome_folder, params$manhattan_png))
-  # ggsave(plot = p, width = 30, height = 15, units = "cm", filename = here("GWAS", output_name), device = "pdf") # PDF version
-  
-  pvals <- list(
-    suggestive = don |> filter(LOG10P > -log10(5e-06)),
-    genomewide = don |> filter(LOG10P > -log10(5e-08))
-  )
-
-  write.csv(pvals$suggestive, paste0(dir_gwas_results,"/GWAS/", params$pval_file))
-  
-  # QQ
-  plot_qq(gwas, paste0(params$outcome_folder,"/", params$qq_png))
-  
-  # FUMA
-  get_fuma_format(gwas, paste0(params$outcome_folder,"/", params$fuma_file))
+  #LocusCompareV2
+  get_loc_format(gwas, paste0(params$outcome_folder,"/", params$loc_file))
 
   print(paste0("Done ", params$file))
 }

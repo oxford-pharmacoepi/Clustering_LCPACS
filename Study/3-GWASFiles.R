@@ -452,16 +452,16 @@ make_characterisation <- function(dat, cohorts, suffix) {
                                    baselineCharacteristics, biomarkers, name, name_cohort)
   
   y <- longCovid_clust |>
-    mutate(order = row_number()) |>
+    dplyr::mutate(order = row_number()) |>
     dplyr::select(-c("order")) |>
-    mutate(`Risk factor` = if_else(`Risk factor` == "Sociodemographics factors", 
+    dplyr::mutate(`Risk factor` = if_else(`Risk factor` == "Sociodemographics factors", 
                                    "Sociodemographic factors", 
                                    `Risk factor`))
   y <- y |>
-    filter(`Risk factor` == "N") |>
+    dplyr::filter(`Risk factor` == "N") |>
     rbind(
       y |>
-        filter(`Risk factor` != "N")
+        dplyr::filter(`Risk factor` != "N")
     )
   
   # # Step 3: formatting flextable
@@ -505,16 +505,6 @@ for (nm in names(datasets)) {
 
 # Start with the first GWAS tibble
 table_combined <- charac_tables[[1]] |> dplyr::select(-"GWAS")
-
-# Loop through the rest and join by "Risk factor"
-for (i in 2:length(charac_tables)) {
-  table_combined <- full_join(
-    table_combined,
-    charac_tables[[i]] |> dplyr::select(-"GWAS"),
-    by = "Risk factor",
-    suffix = c("", paste0("_", names(charac_tables)[i]))
-  )
-}
 
 ft_full <- table_combined %>%
   flextable() %>%
@@ -654,4 +644,373 @@ write.table(longCovid_casesvscontrols |>
               dplyr::rename("FID" = "pid",
                             "IID" = "id") |> dplyr::select(c("FID", "IID", "state")), paste0(dir_clust_results,"/GWAS/","phenotype_pccvscovid.txt"), row.names = FALSE, quote = FALSE)
 
+
+# PCC cases vs all other individuals available (irrespective of SARS-CoV-2 status, etc.)
+longCovid_all <- health_questionnaire |>
+  recordAttrition() |>
+  dplyr::filter(!is.na(questionnaire_started)) |>
+  recordAttrition("Restrict to people who answered the questionnaire") |>
+  addGwasCovariates(ukb) |>
+  mutate("age_when_quest" = 2022 - year_of_birth) |>
+  mutate("age2" = age_when_quest^2) |>
+  mutate("agesex" = age_when_quest*sex) |>
+  dplyr::select(-c("year_of_birth")) |>
+  dplyr::filter(genetic_sex == sex) |>
+  recordAttrition("Restrict to people with the same sex and genetic sex recorded") |>
+  dplyr::filter(is.na(sex_chromosome_aneuploidy)) |>
+  recordAttrition("Restrict to people with no sex chromosome aneuploidy") |>
+  dplyr::filter(is.na(heterozygosity)) |>
+  recordAttrition("Restrict to people that are no outliers for heterozygosity or missing rate") |>
+  dplyr::anti_join(longCovid_cases, by = "eid") |>
+  recordAttrition("Restrict to people not in the case cohort") 
+
+longCovid_casesvsall <- as.phe(longCovid_cases |> 
+                                      dplyr::mutate(state = 1) |>
+                                      dplyr::select("pid" = "eid", "state", "BC_age" = "age_when_infected", "BC_sex" = "sex", "BC_age2" = "age2", "BC_agesex" = "agesex", "batch", starts_with("pc")) |> 
+                                      dplyr::mutate("id" = pid) |> 
+                                      dplyr::relocate("pid") |>
+                                      union_all(
+                                        longCovid_all %>%
+                                          dplyr::mutate(state = 0) |>
+                                          dplyr::select("pid" = "eid", "state", "BC_age" = "age_when_quest", "BC_sex" = "sex", "BC_age2" = "age2", "BC_agesex" = "agesex", "batch", starts_with("pc")) |> 
+                                          dplyr::mutate("id" = pid) |> 
+                                          dplyr::relocate("pid")
+                                      ), "pid", "id")
+
+write.table(longCovid_casesvsall |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id"), paste0(dir_clust_results,"/GWAS/","covariate_pccvsall.txt"), row.names = FALSE, quote = FALSE)
+
+write.table(longCovid_casesvsall |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id") |> dplyr::select(c("FID", "IID")), paste0(dir_clust_results,"/GWAS/","sample_included_pccvsall.txt"), row.names = FALSE, quote = FALSE)
+
+write.table(longCovid_casesvsall |>
+              dplyr::rename("FID" = "pid",
+                            "IID" = "id") |> dplyr::select(c("FID", "IID", "state")), paste0(dir_clust_results,"/GWAS/","phenotype_pccvsall.txt"), row.names = FALSE, quote = FALSE)
+
+
+# Clusters vs all
+clust1_vsall <- as.phe(
+  data_clustering |>
+    dplyr::filter(cluster_assignment == 1) |>
+    dplyr::mutate(state = 1) |>
+    dplyr::select(-"cluster_assignment") |>
+    dplyr::select(
+      "pid" = "eid",
+      "state",
+      "BC_age" = "age_when_infected",
+      "BC_sex" = "sex",
+      "BC_age2" = "age2",
+      "BC_agesex" = "agesex",
+      "batch",
+      starts_with("pc")
+    ) |>
+    dplyr::mutate("id" = pid) |>
+    dplyr::relocate("pid") |>
+    union_all(
+      longCovid_all %>%
+        dplyr::mutate(state = 0) |>
+        dplyr::select(
+          "pid" = "eid",
+          "state",
+          "BC_age" = "age_when_quest",
+          "BC_sex" = "sex",
+          "BC_age2" = "age2",
+          "BC_agesex" = "agesex",
+          "batch",
+          starts_with("pc")
+        ) |>
+        dplyr::mutate("id" = pid) |>
+        dplyr::relocate("pid")
+    ),
+  "pid",
+  "id"
+)
+
+write.table(
+  clust1_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id"),
+  paste0(dir_clust_results, "/GWAS/", "covariate_clust1vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust1_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID")),
+  paste0(
+    dir_clust_results,
+    "/GWAS/",
+    "sample_included_clust1vsall.txt"
+  ),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust1_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID", "state")),
+  paste0(dir_clust_results, "/GWAS/", "phenotype_clust1vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+
+clust2_vsall <- as.phe(
+  data_clustering |>
+    dplyr::filter(cluster_assignment == 2) |>
+    dplyr::mutate(state = 1) |>
+    dplyr::select(-"cluster_assignment") |>
+    dplyr::select(
+      "pid" = "eid",
+      "state",
+      "BC_age" = "age_when_infected",
+      "BC_sex" = "sex",
+      "BC_age2" = "age2",
+      "BC_agesex" = "agesex",
+      "batch",
+      starts_with("pc")
+    ) |>
+    dplyr::mutate("id" = pid) |>
+    dplyr::relocate("pid") |>
+    union_all(
+      longCovid_all %>%
+        dplyr::mutate(state = 0) |>
+        dplyr::select(
+          "pid" = "eid",
+          "state",
+          "BC_age" = "age_when_quest",
+          "BC_sex" = "sex",
+          "BC_age2" = "age2",
+          "BC_agesex" = "agesex",
+          "batch",
+          starts_with("pc")
+        ) |>
+        dplyr::mutate("id" = pid) |>
+        dplyr::relocate("pid")
+    ),
+  "pid",
+  "id"
+)
+
+write.table(
+  clust2_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id"),
+  paste0(dir_clust_results, "/GWAS/", "covariate_clust2vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust2_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID")),
+  paste0(
+    dir_clust_results,
+    "/GWAS/",
+    "sample_included_clust2vsall.txt"
+  ),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust2_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID", "state")),
+  paste0(dir_clust_results, "/GWAS/", "phenotype_clust2vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+
+clust3_vsall <- as.phe(
+  data_clustering |>
+    dplyr::filter(cluster_assignment == 3) |>
+    dplyr::mutate(state = 1) |>
+    dplyr::select(-"cluster_assignment") |>
+    dplyr::select(
+      "pid" = "eid",
+      "state",
+      "BC_age" = "age_when_infected",
+      "BC_sex" = "sex",
+      "BC_age2" = "age2",
+      "BC_agesex" = "agesex",
+      "batch",
+      starts_with("pc")
+    ) |>
+    dplyr::mutate("id" = pid) |>
+    dplyr::relocate("pid") |>
+    union_all(
+      longCovid_all %>%
+        dplyr::mutate(state = 0) |>
+        dplyr::select(
+          "pid" = "eid",
+          "state",
+          "BC_age" = "age_when_quest",
+          "BC_sex" = "sex",
+          "BC_age2" = "age2",
+          "BC_agesex" = "agesex",
+          "batch",
+          starts_with("pc")
+        ) |>
+        dplyr::mutate("id" = pid) |>
+        dplyr::relocate("pid")
+    ),
+  "pid",
+  "id"
+)
+
+write.table(
+  clust3_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id"),
+  paste0(dir_clust_results, "/GWAS/", "covariate_clust3vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust3_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID")),
+  paste0(
+    dir_clust_results,
+    "/GWAS/",
+    "sample_included_clust3vsall.txt"
+  ),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+write.table(
+  clust3_vsall |>
+    dplyr::rename("FID" = "pid", "IID" = "id") |> dplyr::select(c("FID", "IID", "state")),
+  paste0(dir_clust_results, "/GWAS/", "phenotype_clust3vsall.txt"),
+  row.names = FALSE,
+  quote = FALSE
+)
+
+
+# Characterisation of all PCC and gen pop
+
+# List of six datasets
+datasets <- list(
+  "PCC" = longCovid_casesvsall
+)
+
+# Matching cohort names for each dataset
+# (controls always first, cases second)
+cohort_names <- list(
+  "PCC" = c("Controls (General population)", "Cases (PCC)")
+)
+
+# Create a table one with less data with all cohort together
+charac_tables <- list()
+
+# Run it for all datasets ----
+for (nm in names(datasets)) {
+  charac_tables[[nm]] <- make_characterisation(
+    dat = datasets[[nm]],
+    cohorts = cohort_names[[nm]],
+    suffix = nm
+  )
+}
+
+# Start with the first GWAS tibble
+table_combined <- charac_tables[[1]] |> dplyr::select(-"GWAS")
+
+ft_full <- table_combined %>%
+  flextable() %>%
+  bold(part = "header") %>%
+  align(j = 2:ncol(table_combined), align = "center", part = "all") %>%
+  autofit()
+
+# Identify main section rows to merge and bold
+merge <- which(table_combined$`Risk factor` %in% c(
+  "Sociodemographic factors", 
+  "Comorbidities [Cases (%)]", 
+  "Biomarkers [Mean (SD)]"
+))
+
+# Identify non-empty rows for shading
+row_fill <- which(!apply(table_combined[, -1], 1, function(x) all(x == " ")))
+
+# Create flextable
+ft <- table_combined %>%
+  flextable() %>%
+  span_header() %>%
+  bold(part = "header") %>%
+  align(j = 2:ncol(table_combined), align = "center", part = "all") %>%
+  bg(bg = "#F2F2F2", i = 1, j = 2:ncol(table_combined), part = "header")
+
+# Merge and bold main sections
+for(ii in merge){
+  ft <- ft %>%
+    merge_at(i = ii, j = 1:ncol(table_combined)) %>%
+    hline(i = ii-1, border = fp_border(color = "black")) %>%
+    bold(i = ii)
+}
+
+# shade rows with data
+ft <- ft %>%
+  bg(i = row_fill, bg = "#F9F9F9")
+
+# Preview
+ft
+
+# Export full table
+save_as_docx(ft, path = paste0(dir_clust_results, "/Tables/", "Table1_PCC_all_rows.docx"))
+
+# Slice first 15 rows
+table_first15 <- table_combined %>%
+  dplyr::slice(1:15)
+
+merge <- which(table_combined$`Risk factor` %in% c(
+  "Sociodemographic factors"
+))
+
+row_fill <- which(!apply(table_first15[, -1], 1, function(x) all(x == " ")))
+
+colnames(table_first15)[colnames(table_first15) == "Controls (clust1+3,COVID)"] <- "Controls\n(clust1+3,\nCOVID)"
+colnames(table_first15)[colnames(table_first15) == "Controls (clust2+3,COVID)"] <- "Controls\n(clust2+3,\nCOVID)"
+colnames(table_first15)[colnames(table_first15) == "Controls (clust1+2,COVID)"] <- "Controls\n(clust1+2,\nCOVID)"
+
+# Create flextable
+ft <- table_first15 %>%
+  flextable() %>%
+  span_header() %>%
+  bold(part = "header") %>%
+  align(j = 2:ncol(table_first15), align = "center", part = "all") %>%
+  bg(bg = "#F2F2F2", i = 1, j = 2:ncol(table_first15), part = "header")
+
+# Merge and bold main sections
+for(ii in merge){
+  ft <- ft %>%
+    merge_at(i = ii, j = 1:ncol(table_first15)) %>%
+    hline(i = ii-1, border = fp_border(color = "black")) %>%
+    bold(i = ii)
+}
+
+# shade rows with data
+ft <- ft %>%
+  bg(i = row_fill, bg = "#F9F9F9")
+
+# Preview
+ft
+
+# Export full table
+save_as_docx(ft, path = paste0(dir_clust_results, "/Tables/", "Table1_15_rows.docx"))
+
+# As LaTeX not formatted
+table_combined %>%
+  slice(1:15) %>%
+  kable(format = "latex", booktabs = TRUE, escape = FALSE,
+        caption = "Table 1. First 15 baseline characteristics of all GWAS cohorts") %>%
+  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
+  save_kable(file = paste0(dir_clust_results, "/Tables/", "Table1_15_rows.tex"))
+
+# As LaTeX ALL
+table_combined %>%
+  kable(format = "latex", booktabs = TRUE, escape = FALSE,
+        caption = "Table 1. First 15 baseline characteristics of all GWAS cohorts") %>%
+  kable_styling(latex_options = c("hold_position", "scale_down")) %>%
+  save_kable(file = paste0(dir_clust_results, "/Tables/", "Table1_all_rows.tex"))
 
