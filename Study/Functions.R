@@ -163,7 +163,7 @@ addCoding <- function(bd, variable){
       by = variable
     ) |>
     dplyr::select(-!!variable) |>
-    rename(!!variable := "meaning") |>
+    dplyr::rename(!!variable := "meaning") |>
     mutate(!!variable := if_else(.data[[variable]] %in% c("Prefer not to answer", "Do not know"), NA, .data[[variable]]))
   return(bd)
 }
@@ -681,7 +681,7 @@ loadHealthAndWellBeingQuestionnaire <- function(){
     #        length_tinnitus_and_other_hearing_issues = pmax(length_tinnitus, length_hearing_loss, length_hearing_issues, na.rm = TRUE)
     # ) |>
   #  select(-starts_with("symptom_")) |>
- #   rename_at(vars(starts_with("who_")), ~gsub("who","symptom",.))
+ #   dplyr::rename_at(vars(starts_with("who_")), ~gsub("who","symptom",.))
 
   bd <- bd |>
     mutate_at(vars(starts_with("length_")), ~if_else(.  %in% c(-1,-3, 1), 0, .)) |>
@@ -940,19 +940,19 @@ addComorbidities <- function(cohort){
 
   comorbidities <- as_tibble(read.csv(paste0(dir_results,"/LoadCovariates_commorbidities.csv")))  |>
     dplyr::select(-c("X")) |>
-    group_by(eid,value) |>
-    mutate(episode_date = min(episode_date)) |>
-    ungroup() |>
-    distinct() |>
+    dplyr::group_by(eid,value) |>
+    dplyr::mutate(episode_date = min(episode_date)) |>
+    dplyr::ungroup() |>
+    dplyr::distinct() |>
     pivot_wider(names_from = value, values_from = episode_date) |>
-    mutate(across(-c("eid"), ~if_else(is.na(.), as.Date("3024-01-01"), as.Date(.)))) |>
-    right_join(
+    dplyr::mutate(across(-c("eid"), ~if_else(is.na(.), as.Date("3024-01-01"), as.Date(.)))) |>
+    dplyr::right_join(
       cohort |> dplyr::select("eid", "state", "specdate"),
       by = "eid"
     ) |>
-    mutate(across(-c("eid", "state", "specdate"), ~if_else(. < specdate, 1, 0))) |>
-    mutate(across(-c("eid", "state", "specdate"), ~if_else(is.na(.), 0, .))) |>
-    mutate(fracture = if_else(
+    dplyr::mutate(across(-c("eid", "state", "specdate"), ~if_else(. < specdate, 1, 0))) |>
+    dplyr::mutate(across(-c("eid", "state", "specdate"), ~if_else(is.na(.), 0, .))) |>
+    dplyr::mutate(fracture = if_else(
       ankle == 1 | ankle_open == 1 | elbow == 1 | elbow_open == 1 | femur_distal == 1 |
         femur_subtroch_shaft == 1 | femur_subtroch_shaft_history == 1 | knee == 1 |
         nhip_other == 1 | nhip_other_history == 1 | nhip_other_open == 1 | pelvis == 1 |
@@ -966,8 +966,8 @@ addComorbidities <- function(cohort){
               "pelvis_spinalcord", "radius_ulna_open", "rib", "shoulder", "shoulder_open", "spine", "spine_history",
               "spine_open", "tibia", "tibia_open", "tibia_prox", "wrist_forearm", "wrist_forearm_open",
               "hip", "hip_open", "foot", "foot_open", "lumbar_spine_pelvis")) |>
-    mutate(across(-c("eid","state","specdate"), ~if_else(.==1, "Cases","Controls"))) |>
-    inner_join(
+    dplyr::mutate(across(-c("eid","state","specdate"), ~if_else(.==1, "Cases","Controls"))) |>
+    dplyr::inner_join(
       cohort, by = c("eid", "state", "specdate")
     )
 
@@ -977,20 +977,20 @@ addComorbidities <- function(cohort){
 mergeAllCovariates <- function(cohort, baselineCharacteristics, biomarkers){
   cohort |>
     # Add baselinecharacteristics
-    left_join(
+    dplyr::left_join(
       baselineCharacteristics,
       by = "eid"
     ) |>
     addCoding("sex") |>
-    mutate("ethnic_background" = if_else(ethnic_background == 0, "White", "Non-white")) |>
+    dplyr::mutate("ethnic_background" = if_else(ethnic_background == 0, "White", "Non-white")) |>
     addCoding("smoking_status") |>
     # Calculate age when infected
-    mutate(year_infected = year(specdate)) |>
-    mutate(age_when_infected = year_infected - year_of_birth) |>
+    dplyr::mutate(year_infected = year(specdate)) |>
+    dplyr::mutate(age_when_infected = year_infected - year_of_birth) |>
     dplyr::select("eid","specdate","state","ethnic_background","body_mass_index",
            "index_of_multiple_deprivation","sex","smoking_status","age_when_infected") |>
     # Add biomarkers
-    left_join(
+    dplyr::left_join(
       biomarkers, by = "eid"
     ) |>
     # Add comorbidities
@@ -1012,23 +1012,23 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
     cohort_demographics <- cohort1 |>
       tableOneDemographics() |>
       dplyr::select("Risk factor", "UK Biobank dataset") |>
-      rename(!!name_cohort[ii+1] := "UK Biobank dataset")
+      dplyr::rename(!!name_cohort[ii+1] := "UK Biobank dataset")
     cohort_biomarkers <- cohort1 |>
       dplyr::select(all_of(colnames(biomarkers))) |>
       tableOneBiomarkers() |>
       dplyr::select("Risk factor", "UK Biobank dataset") |>
-      rename(!!name_cohort[ii+1] := "UK Biobank dataset")
+      dplyr::rename(!!name_cohort[ii+1] := "UK Biobank dataset")
     cohort_commorbidities <- cohort1 |>
       tableOneCommorbidities() |>
       dplyr::select("Risk factor", "UK Biobank dataset") |>
-      rename(!!name_cohort[ii+1] := "UK Biobank dataset")
+      dplyr::rename(!!name_cohort[ii+1] := "UK Biobank dataset")
 
     demographics_list[[ii+1]] <- cohort_demographics |>
-      mutate(order = row_number())
+      dplyr::mutate(order = row_number())
     biomarkers_list[[ii+1]] <- cohort_biomarkers |>
-      mutate(order = row_number())
+      dplyr::mutate(order = row_number())
     commorbidities_list[[ii+1]] <- cohort_commorbidities |>
-      mutate(order = row_number())
+      dplyr::mutate(order = row_number())
   }
 
   # if(length(demographics_list) == 2 && grepl("Controls",name_cohort[[1]])) {
@@ -1053,7 +1053,7 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
   #     ) |>
   #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
   #     dplyr::select(-c("order")) |>
-  #     rename(!!paste0(name,"_Controls") := "Controls", !!paste0(name,"_Cases") := "Cases")
+  #     dplyr::rename(!!paste0(name,"_Controls") := "Controls", !!paste0(name,"_Cases") := "Cases")
   # } else if (length(demographics_list) == 2 && name_cohort[[1]] == "Controls_matched") {
   #   # Merge all the tables --- Long covid
   #   x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Controls_matched" = " ", "order" = 0, "Cases_matched" = " ") |>
@@ -1076,7 +1076,7 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
   #     ) |>
   #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
   #     dplyr::select(-c("order")) |>
-  #     rename(!!paste0(name,"_Controls_matched") := "Controls_matched", !!paste0(name,"_Cases_matched") := "Cases_matched")
+  #     dplyr::rename(!!paste0(name,"_Controls_matched") := "Controls_matched", !!paste0(name,"_Cases_matched") := "Cases_matched")
   # } else {
   #   # Merge all the tables --- Long covid
   #   x_cohort <- tibble("Risk factor" = "Sociodemographic factors", "Cluster 1" = " ", "order" = 0, "Cluster 2" = " ", "Cluster 3" = " ") |>
@@ -1104,7 +1104,7 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
   #     ) |>
   #     filter(!`Risk factor` %in% c("Counts [N (%)]","Missings", "Counts", "\t\tCounts", "\t\tQ05, Q25, Q50, Q75, Q95", "\t\tMissings")) |>
   #     dplyr::select(-c("order")) |>
-  #     rename(!!paste0(name,"_Cluster 1") := "Cluster 1", !!paste0(name,"_Cluster 2") := "Cluster 2", !!paste0(name,"_Cluster 3") := "Cluster 3")
+  #     dplyr::rename(!!paste0(name,"_Cluster 1") := "Cluster 1", !!paste0(name,"_Cluster 2") := "Cluster 2", !!paste0(name,"_Cluster 3") := "Cluster 3")
   # }
   
   
@@ -1139,9 +1139,9 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
         biomarkers_list[[1]] |> inner_join(biomarkers_list[[2]], by = c("order", "Risk factor")) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
       ) |>
-      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
+      dplyr::filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
       dplyr::select(-c("order")) |>
-      rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
+      dplyr::rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
     
   } else if (length(demographics_list) == 3) {
     # 3 clusters (any labels, e.g. "Cluster 1", "Cluster 2", "Cluster 3")
@@ -1163,9 +1163,9 @@ tableOneStep1 <- function(x, baselineCharacteristics, biomarkers, name, name_coh
         reduce(biomarkers_list, ~ inner_join(.x, .y, by = c("order","Risk factor"))) |>
           mutate(`Risk factor` = gsub(" \\(\\%\\)","",`Risk factor`))
       ) |>
-      filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
+      dplyr::filter(!`Risk factor` %in% c("Counts [N (%)]","Missings","Counts","\t\tCounts","\t\tQ05, Q25, Q50, Q75, Q95","\t\tMissings")) |>
       dplyr::select(-c("order")) |>
-      rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
+      dplyr::rename_with(~ paste0(name, "_", .x), .cols = all_of(name_cohort))
   }
   
  
@@ -1186,7 +1186,7 @@ reverseCoding <- function(bd, variable){
       by = variable
     ) |>
     dplyr::select(-!!variable) |>
-    rename(!!variable := "coding")
+    dplyr::rename(!!variable := "coding")
 
   return(bd)
 }
